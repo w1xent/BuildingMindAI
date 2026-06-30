@@ -1,5 +1,7 @@
 # BuildingMind AI — CLAUDE.md
 
+> Подробности: [Бриф продукта](Бриф_продукта.md) · [Техническая спецификация](Техническая_спецификация.md) · [Журнал решений](Журнал_решений.md)
+
 ## Что мы строим
 
 **BuildingMind AI** — B2B SaaS платформа для коммерческой недвижимости (PropTech / Smart Building).
@@ -51,10 +53,13 @@
 
 | Компонент | Технология |
 |-----------|-----------|
-| Backend   | Go        |
-| AI/ML     | Python    |
-| Frontend  | TBD       |
-| DevOps    | TBD       |
+| Backend   | Go 1.22+  |
+| AI/ML     | Python 3.11+ (FastAPI) |
+| Frontend MVP | HTML + CSS + JS (`index.html`) |
+| Frontend v2 | React + TypeScript (после подтверждения гипотезы) |
+| БД | PostgreSQL + TimescaleDB |
+| Очередь | Redis Streams |
+| DevOps | Docker + GitHub Actions (уточняется) |
 
 ## Product Vision
 
