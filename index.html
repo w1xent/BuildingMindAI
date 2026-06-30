@@ -204,6 +204,18 @@
   <div style="color:var(--text-secondary); font-size:13px;">Загрузка данных...</div>
 </div>
 
+<!-- Fatal error (не удалось загрузить данные / выполнить анализ) -->
+<div id="screen-error" class="screen" style="min-height:100vh; align-items:center; justify-content:center; background:var(--bg);">
+  <div class="auth-card" style="text-align:center; box-shadow:var(--shadow-md);">
+    <div style="width:48px;height:48px;border-radius:12px;background:var(--high-bg);color:var(--high-text);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+    </div>
+    <div class="auth-title">Не удалось загрузить данные</div>
+    <div class="auth-subtitle" id="error-msg" style="margin-bottom:24px;">Проверьте подключение и попробуйте снова.</div>
+    <button class="btn-primary" onclick="location.reload()">Повторить</button>
+  </div>
+</div>
+
 <!-- Auth -->
 <div id="screen-auth" class="screen">
   <div class="auth-card">
@@ -442,20 +454,32 @@ const ROLES = {
 // ═══════════════════════════════════════════════════════
 //  PERSISTENCE
 // ═══════════════════════════════════════════════════════
+// Всё хранилище обёрнуто в try/catch: приватный режим Safari, отключённый
+// localStorage, переполнение квоты не должны ломать приложение —
+// в худшем случае оно работает «в памяти» на время сессии.
 function saveStatuses() {
-  localStorage.setItem('bm_statuses', JSON.stringify(S.statuses));
+  try { localStorage.setItem('bm_statuses', JSON.stringify(S.statuses)); }
+  catch (e) { console.warn('Статусы не сохранены (хранилище недоступно):', e); }
 }
 function loadStatuses() {
-  try { return JSON.parse(localStorage.getItem('bm_statuses') || '{}'); } catch { return {}; }
+  try {
+    const raw = JSON.parse(localStorage.getItem('bm_statuses') || '{}');
+    // защита от повреждённой формы (массив / примитив / null)
+    return (raw && typeof raw === 'object' && !Array.isArray(raw)) ? raw : {};
+  } catch { return {}; }
 }
 function saveSession(user) {
-  localStorage.setItem('bm_user', JSON.stringify(user));
+  try { localStorage.setItem('bm_user', JSON.stringify(user)); }
+  catch (e) { console.warn('Сессия не сохранена (хранилище недоступно):', e); }
 }
 function loadSession() {
-  try { return JSON.parse(localStorage.getItem('bm_user')); } catch { return null; }
+  try {
+    const raw = JSON.parse(localStorage.getItem('bm_user'));
+    return (raw && typeof raw === 'object' && typeof raw.id === 'string') ? raw : null;
+  } catch { return null; }
 }
 function clearSession() {
-  localStorage.removeItem('bm_user');
+  try { localStorage.removeItem('bm_user'); } catch { /* no-op */ }
 }
 
 // ═══════════════════════════════════════════════════════
@@ -465,25 +489,52 @@ async function init() {
   S.statuses = loadStatuses();
 
   try {
-    const data = await fetch('./data.json').then(r => r.json());
+    if (typeof BuildingMindAnalysis === 'undefined') {
+      throw new Error('Движок анализа (analysis.js) не загрузился');
+    }
+    const resp = await fetch('./data.json');
+    if (!resp.ok) throw new Error('HTTP ' + resp.status + ' при загрузке data.json');
+    const data = await resp.json();
+
+    // Валидация формы данных — не доверяем источнику вслепую
+    if (!data || !Array.isArray(data.users) || !Array.isArray(data.systems)
+        || data.users.length === 0 || data.systems.length === 0) {
+      throw new Error('Некорректная структура data.json');
+    }
+
     S.users    = data.users;
     S.systems  = data.systems;
     // Анализ аномалий: телеметрия → детектор → приоритизация → проблемы
     S.problems = BuildingMindAnalysis.run(S.systems);
+
+    if (!Array.isArray(S.problems) || S.problems.length === 0) {
+      throw new Error('Анализ не вернул ни одной проблемы');
+    }
   } catch (e) {
-    console.error('Не удалось загрузить данные или выполнить анализ', e);
+    return showFatalError(e);
   }
 
   const saved = loadSession();
-  if (saved) {
-    const still = S.users.find(u => u.id === saved.id);
-    if (still) {
-      S.user = saved;
-      navigate('dashboard');
-      return;
-    }
+  if (saved && S.users.some(u => u.id === saved.id)) {
+    S.user = saved;
+    navigate('dashboard');
+    return;
   }
   navigate('auth');
+}
+
+function showFatalError(err) {
+  console.error('Фатальная ошибка инициализации:', err);
+  const msg = document.getElementById('error-msg');
+  if (location.protocol === 'file:') {
+    msg.textContent = 'Откройте приложение через локальный сервер (npx serve), '
+      + 'а не двойным кликом по файлу — браузер блокирует загрузку данных по file://.';
+  } else {
+    msg.textContent = 'Не удалось загрузить данные систем или выполнить анализ. '
+      + 'Проверьте, что файлы data.json и analysis.js доступны, и попробуйте снова.';
+  }
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-error').classList.add('active');
 }
 
 // ═══════════════════════════════════════════════════════
@@ -505,7 +556,8 @@ function handleLogin() {
     return;
   }
 
-  const user = S.users.find(u => u.email === email && u.password === password);
+  const user = S.users.find(u =>
+    u.email.toLowerCase() === email.toLowerCase() && u.password === password);
   if (!user) {
     errEl.textContent = 'Неверный email или пароль';
     errEl.classList.add('visible');
@@ -537,8 +589,17 @@ document.getElementById('inp-email').addEventListener('keydown', e => {
 //  NAVIGATION
 // ═══════════════════════════════════════════════════════
 function navigate(to) {
+  // Экраны, требующие выбранной проблемы: если её нет (прямой вызов,
+  // устаревший currentId) — возвращаем на дашборд, а не показываем пустоту.
+  if ((to === 'detail' || to === 'recommendation')
+      && !S.problems.some(p => p.id === S.currentId)) {
+    to = 'dashboard';
+  }
+  const screen = document.getElementById('screen-' + to);
+  if (!screen) { console.warn('Неизвестный экран:', to); return; }
+
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById('screen-' + to).classList.add('active');
+  screen.classList.add('active');
   window.scrollTo(0, 0);
 
   if (to === 'auth') {
@@ -597,7 +658,7 @@ function enrichedProblems() {
     ...p,
     status:      getProblemStatus(p.id),
     statusAt:    getStatusTimestamp(p.id),
-    detectedAt:  new Date(Date.now() - p.detected_minutes_ago * 60 * 1000)
+    detectedAt:  new Date(Date.now() - (p.detected_minutes_ago || 0) * 60 * 1000)
   })).sort((a, b) => b.priority_score - a.priority_score);
 }
 
@@ -640,29 +701,47 @@ const ICONS = {
 };
 const LABELS = { high: 'Высокий', medium: 'Средний', low: 'Низкий' };
 
+// Экранирование любых данных перед вставкой через innerHTML.
+// Сейчас data.json статичен, но при переходе на реальные данные систем
+// (имена, описания из интеграций) это единственная защита от инъекций.
+function escapeHTML(s) {
+  return String(s == null ? '' : s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+// Приоритет всегда сводим к известному набору — иначе он попадает в имя
+// CSS-класса и (теоретически) может сломать разметку.
+function normPriority(p) {
+  return (p === 'high' || p === 'medium' || p === 'low') ? p : 'low';
+}
+
 function problemCardHTML(p, clickable = true) {
   const isDone  = p.status !== 'active';
-  const iclass  = isDone ? 'done' : p.priority;
-  const icon    = isDone ? ICONS.done : ICONS[p.priority];
+  const prio    = normPriority(p.priority);
+  const iclass  = isDone ? 'done' : prio;
+  const icon    = isDone ? ICONS.done : ICONS[prio];
   const badge   = isDone
     ? `<span class="badge badge-done">В работе</span>`
-    : `<span class="badge badge-${p.priority}">${LABELS[p.priority]}</span>`;
+    : `<span class="badge badge-${prio}">${LABELS[prio]}</span>`;
   const time = isDone && p.statusAt
     ? `Принято в работу: ${formatTime(p.statusAt)}`
     : `Обнаружено ${timeAgo(p.detectedAt)}`;
-  const click = (clickable && !isDone) ? `onclick="openProblem('${p.id}')"` : '';
+  const canOpen = clickable && !isDone;
+  // клик навешивается делегированием по data-id — без inline-onclick,
+  // чтобы id из данных не мог «сбежать» в обработчик
+  const attrs = canOpen ? ` data-open-id="${escapeHTML(p.id)}"` : '';
 
   return `
-    <div class="problem-card ${isDone ? 'done' : ''}" ${click}>
+    <div class="problem-card ${isDone ? 'done' : ''}"${attrs}>
       <div class="problem-icon ${iclass}">${icon}</div>
       <div class="problem-info">
-        <div class="problem-name">${p.system_name}</div>
-        <div class="problem-desc">${p.description}</div>
-        <div class="problem-time">${time}</div>
+        <div class="problem-name">${escapeHTML(p.system_name)}</div>
+        <div class="problem-desc">${escapeHTML(p.description)}</div>
+        <div class="problem-time">${escapeHTML(time)}</div>
       </div>
       <div class="problem-meta">
         ${badge}
-        ${(clickable && !isDone) ? `<svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>` : ''}
+        ${canOpen ? `<svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>` : ''}
       </div>
     </div>`;
 }
@@ -727,11 +806,11 @@ function renderHistoryTab() {
       <div class="history-item" style="margin-bottom:10px">
         <div class="problem-icon done">${ICONS.done}</div>
         <div class="problem-info">
-          <div class="problem-name">${p.system_name}</div>
-          <div class="problem-desc">${p.description}</div>
-          <div class="history-time">Принято в работу: ${formatTime(p.statusAt)}</div>
+          <div class="problem-name">${escapeHTML(p.system_name)}</div>
+          <div class="problem-desc">${escapeHTML(p.description)}</div>
+          <div class="history-time">Принято в работу: ${escapeHTML(formatTime(p.statusAt))}</div>
         </div>
-        <span class="badge badge-${p.priority}">${LABELS[p.priority]}</span>
+        <span class="badge badge-${normPriority(p.priority)}">${LABELS[normPriority(p.priority)]}</span>
       </div>`).join('')
     : emptyHTML('История пуста', 'Принятые в работу проблемы появятся здесь');
 }
@@ -740,9 +819,19 @@ function renderHistoryTab() {
 //  DETAIL + RECOMMENDATION
 // ═══════════════════════════════════════════════════════
 function openProblem(id) {
+  // открываем только существующую и ещё активную проблему
+  const p = S.problems.find(x => x.id === id);
+  if (!p) { console.warn('Проблема не найдена:', id); return; }
+  if (getProblemStatus(id) !== 'active') return;
   S.currentId = id;
   navigate('detail');
 }
+
+// Делегирование клика по карточкам (один слушатель на всё приложение)
+document.addEventListener('click', e => {
+  const card = e.target.closest('.problem-card[data-open-id]');
+  if (card) openProblem(card.getAttribute('data-open-id'));
+});
 
 function renderDetail() {
   const p = S.problems.find(x => x.id === S.currentId);
@@ -770,6 +859,13 @@ function renderDetail() {
 // ── «Как обнаружено системой» — статистика + спарклайн ──
 function renderAnalysis(p) {
   const a = p.analysis;
+  // если по какой-то причине нет данных анализа — не падаем, просто прячем блок
+  if (!a || !Array.isArray(a.series) || a.series.length === 0) {
+    document.getElementById('d-analysis-stats').innerHTML = '';
+    document.getElementById('d-sparkline').innerHTML = '';
+    document.getElementById('d-spark-axis').textContent = '';
+    return;
+  }
   const fmt1 = x => (Math.round(x * 10) / 10).toLocaleString('ru-RU');
   const rows = [];
 
@@ -790,7 +886,7 @@ function renderAnalysis(p) {
   rows.push(['Severity', `${Math.round(a.severity * 100)}%`]);
 
   document.getElementById('d-analysis-stats').innerHTML = rows.map(r =>
-    `<div class="stat-row"><span class="stat-key">${r[0]}</span><span class="stat-val${r[2] ? ' accent' : ''}">${r[1]}</span></div>`
+    `<div class="stat-row"><span class="stat-key">${escapeHTML(r[0])}</span><span class="stat-val${r[2] ? ' accent' : ''}">${escapeHTML(r[1])}</span></div>`
   ).join('');
 
   document.getElementById('d-sparkline').innerHTML = sparklineSVG(a);
@@ -859,9 +955,12 @@ function renderRecommendation() {
   if (!p) return;
 
   document.getElementById('rec-title').textContent = p.system_name + ' — Рекомендуемое действие';
-  document.getElementById('rec-steps').innerHTML   = p.steps.map((s, i) =>
-    `<div class="rec-step"><div class="step-num">${i + 1}</div><div class="step-text">${s}</div></div>`
-  ).join('');
+  const steps = Array.isArray(p.steps) ? p.steps : [];
+  document.getElementById('rec-steps').innerHTML = steps.length
+    ? steps.map((s, i) =>
+        `<div class="rec-step"><div class="step-num">${i + 1}</div><div class="step-text">${escapeHTML(s)}</div></div>`
+      ).join('')
+    : `<div class="step-text" style="color:var(--text-muted)">Рекомендации не заданы для этой проблемы.</div>`;
 }
 
 function markInProgress() {
@@ -893,6 +992,19 @@ function resetDemo() {
   navigate('dashboard');
   showToast('Демо сброшено — все проблемы снова активны');
 }
+
+// ═══════════════════════════════════════════════════════
+//  MULTI-TAB SYNC
+// ═══════════════════════════════════════════════════════
+// Если статусы изменили в другой вкладке — подхватываем,
+// чтобы вкладки не показывали рассинхронизированный список.
+window.addEventListener('storage', e => {
+  if (e.key !== 'bm_statuses') return;
+  S.statuses = loadStatuses();
+  if (document.getElementById('screen-dashboard').classList.contains('active')) {
+    renderHomeTab(); renderAllTab(); renderHistoryTab();
+  }
+});
 
 // ═══════════════════════════════════════════════════════
 //  BOOT
