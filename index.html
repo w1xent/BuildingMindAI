@@ -8,945 +8,360 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg: #f1f5f9;
-      --surface: #ffffff;
-      --sidebar-bg: #0f172a;
-      --sidebar-hover: #1e293b;
-      --sidebar-active: #1e293b;
-      --sidebar-text: #94a3b8;
-      --sidebar-text-active: #f8fafc;
-      --text-primary: #0f172a;
+      --bg:             #f1f5f9;
+      --surface:        #ffffff;
+      --sidebar-bg:     #0f172a;
+      --sidebar-hover:  #1e293b;
+      --sidebar-text:   #94a3b8;
+      --sidebar-active: #f8fafc;
+      --text-primary:   #0f172a;
       --text-secondary: #64748b;
-      --text-muted: #94a3b8;
-      --border: #e2e8f0;
-      --accent: #2563eb;
-      --accent-hover: #1d4ed8;
+      --text-muted:     #94a3b8;
+      --border:         #e2e8f0;
+      --accent:         #2563eb;
+      --accent-hover:   #1d4ed8;
+      --danger:         #dc2626;
 
-      --high-bg: #fef2f2;
-      --high-text: #dc2626;
-      --high-border: #fecaca;
-      --med-bg: #fffbeb;
-      --med-text: #d97706;
-      --med-border: #fde68a;
-      --low-bg: #eff6ff;
-      --low-text: #2563eb;
-      --low-border: #bfdbfe;
-      --done-bg: #f0fdf4;
-      --done-text: #16a34a;
-      --done-border: #bbf7d0;
+      --high-bg:    #fef2f2;  --high-text:  #dc2626;  --high-border: #fecaca;
+      --med-bg:     #fffbeb;  --med-text:   #d97706;  --med-border:  #fde68a;
+      --low-bg:     #eff6ff;  --low-text:   #2563eb;  --low-border:  #bfdbfe;
+      --done-bg:    #f0fdf4;  --done-text:  #16a34a;  --done-border: #bbf7d0;
 
-      --radius: 12px;
-      --radius-sm: 8px;
+      --radius: 12px;  --radius-sm: 8px;
       --shadow: 0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
       --shadow-md: 0 4px 6px -1px rgba(0,0,0,.07), 0 2px 4px -1px rgba(0,0,0,.04);
     }
 
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: var(--bg);
-      color: var(--text-primary);
-      min-height: 100vh;
-      font-size: 14px;
-      line-height: 1.5;
-    }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text-primary); min-height: 100vh; font-size: 14px; line-height: 1.5; }
 
     .screen { display: none; }
     .screen.active { display: flex; }
 
-    /* ─── AUTH ─── */
-    #screen-auth {
-      min-height: 100vh;
-      align-items: center;
-      justify-content: center;
-      background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%);
-    }
+    /* ── AUTH ── */
+    #screen-auth { min-height: 100vh; align-items: center; justify-content: center; background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%); }
 
-    .auth-card {
-      background: var(--surface);
-      border-radius: var(--radius);
-      padding: 48px 40px;
-      width: 100%;
-      max-width: 400px;
-      box-shadow: 0 20px 60px rgba(0,0,0,.3);
-    }
-
-    .auth-logo {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 32px;
-      justify-content: center;
-    }
-
-    .auth-logo-icon {
-      width: 40px;
-      height: 40px;
-      background: var(--accent);
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .auth-logo-icon svg { color: white; }
-
-    .auth-logo-name {
-      font-size: 18px;
-      font-weight: 700;
-      color: var(--text-primary);
-    }
-
-    .auth-title {
-      text-align: center;
-      font-size: 22px;
-      font-weight: 700;
-      margin-bottom: 8px;
-    }
-
-    .auth-subtitle {
-      text-align: center;
-      color: var(--text-secondary);
-      margin-bottom: 32px;
-      font-size: 13px;
-    }
+    .auth-card { background: var(--surface); border-radius: var(--radius); padding: 48px 40px; width: 100%; max-width: 400px; box-shadow: 0 20px 60px rgba(0,0,0,.3); }
+    .auth-logo { display: flex; align-items: center; gap: 10px; margin-bottom: 32px; justify-content: center; }
+    .auth-logo-icon { width: 40px; height: 40px; background: var(--accent); border-radius: 10px; display: flex; align-items: center; justify-content: center; }
+    .auth-logo-name { font-size: 18px; font-weight: 700; }
+    .auth-title { text-align: center; font-size: 22px; font-weight: 700; margin-bottom: 6px; }
+    .auth-subtitle { text-align: center; color: var(--text-secondary); margin-bottom: 32px; font-size: 13px; }
 
     .form-group { margin-bottom: 18px; }
-
-    .form-label {
-      display: block;
-      font-size: 13px;
-      font-weight: 500;
-      margin-bottom: 6px;
-      color: var(--text-primary);
-    }
-
-    .form-input {
-      width: 100%;
-      padding: 10px 14px;
-      border: 1.5px solid var(--border);
-      border-radius: var(--radius-sm);
-      font-size: 14px;
-      outline: none;
-      transition: border-color .15s;
-      background: #f8fafc;
-    }
-
+    .form-label { display: block; font-size: 13px; font-weight: 500; margin-bottom: 6px; }
+    .form-input { width: 100%; padding: 10px 14px; border: 1.5px solid var(--border); border-radius: var(--radius-sm); font-size: 14px; outline: none; transition: border-color .15s; background: #f8fafc; }
     .form-input:focus { border-color: var(--accent); background: white; }
+    .form-input.error { border-color: var(--danger); }
 
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      padding: 10px 20px;
-      border-radius: var(--radius-sm);
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      border: none;
-      transition: all .15s;
-      text-decoration: none;
-    }
+    .auth-error { background: var(--high-bg); border: 1px solid var(--high-border); border-radius: var(--radius-sm); padding: 10px 14px; color: var(--high-text); font-size: 13px; margin-bottom: 18px; display: none; }
+    .auth-error.visible { display: block; }
 
-    .btn-primary {
-      background: var(--accent);
-      color: white;
-      width: 100%;
-      padding: 12px;
-    }
-
+    .btn-primary { display: flex; align-items: center; justify-content: center; gap: 6px; width: 100%; padding: 12px; background: var(--accent); color: white; border: none; border-radius: var(--radius-sm); font-size: 14px; font-weight: 600; cursor: pointer; transition: background .15s; }
     .btn-primary:hover { background: var(--accent-hover); }
+    .btn-primary:disabled { opacity: .6; cursor: default; }
+    .auth-hint { text-align: center; margin-top: 16px; color: var(--text-muted); font-size: 12px; }
 
-    .btn-ghost {
-      background: transparent;
-      color: var(--text-secondary);
-    }
-
-    .btn-ghost:hover { color: var(--accent); }
-
-    .auth-forgot {
-      display: block;
-      text-align: center;
-      margin-top: 16px;
-      color: var(--text-secondary);
-      font-size: 13px;
-      cursor: pointer;
-      text-decoration: none;
-    }
-
-    .auth-forgot:hover { color: var(--accent); }
-
-    /* ─── APP LAYOUT ─── */
-    .app-layout {
-      min-height: 100vh;
-      width: 100%;
-    }
-
-    .sidebar {
-      position: fixed;
-      left: 0; top: 0; bottom: 0;
-      width: 220px;
-      background: var(--sidebar-bg);
-      display: flex;
-      flex-direction: column;
-      padding: 0;
-      z-index: 100;
-    }
-
-    .sidebar-logo {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 24px 20px;
-      border-bottom: 1px solid #1e293b;
-    }
-
-    .sidebar-logo-icon {
-      width: 32px;
-      height: 32px;
-      background: var(--accent);
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
-
-    .sidebar-logo-name {
-      font-size: 14px;
-      font-weight: 700;
-      color: #f8fafc;
-      line-height: 1.2;
-    }
-
-    .sidebar-logo-sub {
-      font-size: 10px;
-      color: var(--sidebar-text);
-      font-weight: 400;
-    }
-
-    .sidebar-nav {
-      flex: 1;
-      padding: 16px 12px;
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-
-    .nav-item {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 10px 12px;
-      border-radius: var(--radius-sm);
-      color: var(--sidebar-text);
-      cursor: pointer;
-      transition: all .15s;
-      font-size: 13px;
-      font-weight: 500;
-    }
-
+    /* ── APP LAYOUT ── */
+    .app-layout { min-height: 100vh; width: 100%; }
+    .sidebar { position: fixed; left: 0; top: 0; bottom: 0; width: 220px; background: var(--sidebar-bg); display: flex; flex-direction: column; z-index: 100; }
+    .sidebar-logo { display: flex; align-items: center; gap: 10px; padding: 24px 20px; border-bottom: 1px solid #1e293b; }
+    .sidebar-logo-icon { width: 32px; height: 32px; background: var(--accent); border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .sidebar-logo-name { font-size: 14px; font-weight: 700; color: #f8fafc; line-height: 1.2; }
+    .sidebar-logo-sub { font-size: 10px; color: var(--sidebar-text); }
+    .sidebar-nav { flex: 1; padding: 16px 12px; display: flex; flex-direction: column; gap: 2px; }
+    .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: var(--radius-sm); color: var(--sidebar-text); cursor: pointer; transition: all .15s; font-size: 13px; font-weight: 500; user-select: none; }
     .nav-item:hover { background: var(--sidebar-hover); color: #e2e8f0; }
-    .nav-item.active { background: var(--sidebar-active); color: var(--sidebar-text-active); }
-    .nav-item svg { flex-shrink: 0; }
-
-    .sidebar-user {
-      padding: 16px 20px;
-      border-top: 1px solid #1e293b;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .user-avatar {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      background: #334155;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
-
+    .nav-item.active { background: var(--sidebar-hover); color: var(--sidebar-active); }
+    .sidebar-user { padding: 14px 20px; border-top: 1px solid #1e293b; }
+    .user-row { display: flex; align-items: center; gap: 10px; }
+    .user-avatar { width: 32px; height: 32px; border-radius: 50%; background: #334155; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
     .user-info { flex: 1; }
     .user-name { font-size: 12px; font-weight: 600; color: #e2e8f0; }
     .user-role { font-size: 11px; color: var(--sidebar-text); }
+    .logout-btn { width: 100%; margin-top: 10px; padding: 7px; background: transparent; border: 1px solid #1e293b; border-radius: var(--radius-sm); color: var(--sidebar-text); font-size: 12px; cursor: pointer; transition: all .15s; display: flex; align-items: center; justify-content: center; gap: 6px; }
+    .logout-btn:hover { background: #1e293b; color: #e2e8f0; }
 
-    .main-content {
-      margin-left: 220px;
-      min-height: 100vh;
-      padding: 32px;
-    }
+    .main-content { margin-left: 220px; min-height: 100vh; padding: 32px; }
 
-    /* ─── PAGE HEADER ─── */
-    .page-header {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      margin-bottom: 24px;
-    }
+    /* ── PAGE ELEMENTS ── */
+    .page-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 24px; }
+    .page-title { font-size: 20px; font-weight: 700; }
+    .page-date { font-size: 13px; color: var(--text-secondary); margin-top: 3px; }
 
-    .page-title {
-      font-size: 20px;
-      font-weight: 700;
-      color: var(--text-primary);
-    }
+    .summary-card { background: var(--surface); border-radius: var(--radius); padding: 20px 24px; margin-bottom: 20px; box-shadow: var(--shadow); display: flex; align-items: center; justify-content: space-between; }
+    .summary-count { font-size: 28px; font-weight: 800; }
+    .summary-label { font-size: 13px; color: var(--text-secondary); margin-top: 2px; }
+    .pulse { width: 10px; height: 10px; border-radius: 50%; background: var(--danger); display: inline-block; margin-right: 6px; animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
 
-    .page-date {
-      font-size: 13px;
-      color: var(--text-secondary);
-      margin-top: 3px;
-    }
-
-    /* ─── SUMMARY CARD ─── */
-    .summary-card {
-      background: var(--surface);
-      border-radius: var(--radius);
-      padding: 20px 24px;
-      margin-bottom: 20px;
-      box-shadow: var(--shadow);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .summary-count {
-      font-size: 28px;
-      font-weight: 800;
-      color: var(--text-primary);
-    }
-
-    .summary-label {
-      font-size: 13px;
-      color: var(--text-secondary);
-      margin-top: 2px;
-    }
-
-    .summary-dot {
-      width: 10px; height: 10px;
-      border-radius: 50%;
-      background: var(--high-text);
-      display: inline-block;
-      margin-right: 6px;
-      animation: pulse 2s infinite;
-    }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.4; }
-    }
-
-    /* ─── PROBLEM LIST ─── */
-    .problems-list {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .problem-card {
-      background: var(--surface);
-      border-radius: var(--radius);
-      padding: 16px 20px;
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      box-shadow: var(--shadow);
-      cursor: pointer;
-      transition: box-shadow .15s, transform .1s;
-      border: 1.5px solid transparent;
-    }
-
-    .problem-card:hover {
-      box-shadow: var(--shadow-md);
-      border-color: var(--border);
-      transform: translateY(-1px);
-    }
-
-    .problem-icon {
-      width: 40px; height: 40px;
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
-
-    .problem-icon.high { background: var(--high-bg); color: var(--high-text); }
-    .problem-icon.med  { background: var(--med-bg);  color: var(--med-text);  }
-    .problem-icon.low  { background: var(--low-bg);  color: var(--low-text);  }
-    .problem-icon.done { background: var(--done-bg); color: var(--done-text); }
-
-    .problem-info { flex: 1; min-width: 0; }
-
-    .problem-name {
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--text-primary);
-      margin-bottom: 2px;
-    }
-
-    .problem-desc {
-      font-size: 12px;
-      color: var(--text-secondary);
-    }
-
-    .problem-time {
-      font-size: 11px;
-      color: var(--text-muted);
-      margin-top: 3px;
-    }
-
-    .problem-meta {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex-shrink: 0;
-    }
-
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      padding: 4px 10px;
-      border-radius: 20px;
-      font-size: 11px;
-      font-weight: 600;
-    }
-
-    .badge-high  { background: var(--high-bg);  color: var(--high-text);  }
-    .badge-med   { background: var(--med-bg);   color: var(--med-text);   }
-    .badge-low   { background: var(--low-bg);   color: var(--low-text);   }
-    .badge-done  { background: var(--done-bg);  color: var(--done-text);  }
-
-    .chevron { color: var(--text-muted); }
-
-    /* ─── DETAIL PAGE ─── */
-    .back-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      color: var(--text-secondary);
-      font-size: 13px;
-      font-weight: 500;
-      cursor: pointer;
-      margin-bottom: 24px;
-      padding: 6px 0;
-      border: none;
-      background: none;
-      transition: color .15s;
-    }
-
-    .back-btn:hover { color: var(--accent); }
-
-    .detail-header {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      margin-bottom: 28px;
-    }
-
-    .detail-title {
-      font-size: 24px;
-      font-weight: 800;
-      color: var(--text-primary);
-    }
-
-    .detail-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
-      margin-bottom: 14px;
-    }
-
-    .detail-section {
-      background: var(--surface);
-      border-radius: var(--radius);
-      padding: 20px;
-      box-shadow: var(--shadow);
-    }
-
-    .detail-section.full { grid-column: 1 / -1; }
-
-    .section-label {
-      font-size: 11px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: .06em;
-      color: var(--text-muted);
-      margin-bottom: 10px;
-    }
-
-    .section-value {
-      font-size: 14px;
-      color: var(--text-primary);
-      line-height: 1.6;
-    }
-
-    .metric-big {
-      font-size: 32px;
-      font-weight: 800;
-      color: var(--high-text);
-      line-height: 1;
-      margin-bottom: 4px;
-    }
-
-    .metric-label {
-      font-size: 12px;
-      color: var(--text-secondary);
-    }
-
-    .probability-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-top: 10px;
-    }
-
-    .probability-badge {
-      background: var(--high-bg);
-      color: var(--high-text);
-      font-size: 12px;
-      font-weight: 700;
-      padding: 4px 12px;
-      border-radius: 20px;
-    }
-
-    .btn-cta {
-      background: var(--accent);
-      color: white;
-      padding: 14px 24px;
-      border-radius: var(--radius-sm);
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      border: none;
-      width: 100%;
-      text-align: center;
-      transition: background .15s;
-      margin-top: 6px;
-    }
-
-    .btn-cta:hover { background: var(--accent-hover); }
-
-    /* ─── RECOMMENDATION ─── */
-    .rec-steps {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      margin-bottom: 16px;
-    }
-
-    .rec-step {
-      display: flex;
-      align-items: flex-start;
-      gap: 14px;
-    }
-
-    .step-num {
-      width: 28px; height: 28px;
-      background: var(--accent);
-      color: white;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 12px;
-      font-weight: 700;
-      flex-shrink: 0;
-      margin-top: 1px;
-    }
-
-    .step-text {
-      font-size: 14px;
-      color: var(--text-primary);
-      padding-top: 4px;
-      line-height: 1.5;
-    }
-
-    .info-box {
-      background: #eff6ff;
-      border: 1px solid #bfdbfe;
-      border-radius: var(--radius-sm);
-      padding: 12px 16px;
-      display: flex;
-      gap: 10px;
-      margin-top: 8px;
-    }
-
-    .info-box-icon { color: var(--accent); flex-shrink: 0; margin-top: 1px; }
-    .info-box-text { font-size: 12px; color: #1d4ed8; line-height: 1.5; }
-
-    .btn-success {
-      background: #16a34a;
-      color: white;
-      padding: 14px 24px;
-      border-radius: var(--radius-sm);
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      border: none;
-      width: 100%;
-      text-align: center;
-      transition: background .15s;
-      margin-top: 16px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-    }
-
-    .btn-success:hover { background: #15803d; }
-
-    /* ─── HISTORY ─── */
-    .history-empty {
-      text-align: center;
-      padding: 80px 20px;
-      color: var(--text-muted);
-    }
-
-    .history-empty svg { margin-bottom: 16px; opacity: .4; }
-    .history-empty p { font-size: 15px; }
-
-    /* ─── PROBLEMS PAGE ─── */
-    .filter-row {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 20px;
-    }
-
-    .filter-btn {
-      padding: 7px 16px;
-      border-radius: 20px;
-      font-size: 12px;
-      font-weight: 600;
-      cursor: pointer;
-      border: 1.5px solid var(--border);
-      background: var(--surface);
-      color: var(--text-secondary);
-      transition: all .15s;
-    }
-
+    .filter-row { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+    .filter-btn { padding: 7px 16px; border-radius: 20px; font-size: 12px; font-weight: 600; cursor: pointer; border: 1.5px solid var(--border); background: var(--surface); color: var(--text-secondary); transition: all .15s; }
     .filter-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
     .filter-btn:hover:not(.active) { border-color: var(--accent); color: var(--accent); }
 
-    /* util */
+    .problems-list { display: flex; flex-direction: column; gap: 10px; }
+    .empty-state { text-align: center; padding: 60px 20px; color: var(--text-muted); }
+    .empty-state svg { margin: 0 auto 16px; display: block; opacity: .35; }
+    .empty-state p { font-size: 15px; margin-bottom: 6px; }
+    .empty-state small { font-size: 12px; }
+
+    .problem-card { background: var(--surface); border-radius: var(--radius); padding: 16px 20px; display: flex; align-items: center; gap: 14px; box-shadow: var(--shadow); cursor: pointer; transition: box-shadow .15s, transform .1s; border: 1.5px solid transparent; }
+    .problem-card:hover { box-shadow: var(--shadow-md); border-color: var(--border); transform: translateY(-1px); }
+    .problem-card.done { opacity: .7; cursor: default; }
+    .problem-card.done:hover { transform: none; box-shadow: var(--shadow); border-color: transparent; }
+    .problem-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .problem-icon.high { background: var(--high-bg); color: var(--high-text); }
+    .problem-icon.medium { background: var(--med-bg); color: var(--med-text); }
+    .problem-icon.low { background: var(--low-bg); color: var(--low-text); }
+    .problem-icon.done { background: var(--done-bg); color: var(--done-text); }
+    .problem-info { flex: 1; min-width: 0; }
+    .problem-name { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
+    .problem-desc { font-size: 12px; color: var(--text-secondary); }
+    .problem-time { font-size: 11px; color: var(--text-muted); margin-top: 3px; }
+    .problem-meta { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+
+    .badge { display: inline-flex; align-items: center; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+    .badge-high { background: var(--high-bg); color: var(--high-text); }
+    .badge-medium { background: var(--med-bg); color: var(--med-text); }
+    .badge-low { background: var(--low-bg); color: var(--low-text); }
+    .badge-done { background: var(--done-bg); color: var(--done-text); }
+    .chevron { color: var(--text-muted); }
+
+    /* ── DETAIL ── */
+    .back-btn { display: inline-flex; align-items: center; gap: 6px; color: var(--text-secondary); font-size: 13px; font-weight: 500; cursor: pointer; margin-bottom: 24px; padding: 6px 0; border: none; background: none; transition: color .15s; }
+    .back-btn:hover { color: var(--accent); }
+    .detail-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 28px; gap: 16px; }
+    .detail-title { font-size: 24px; font-weight: 800; }
+    .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+    .detail-section { background: var(--surface); border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow); }
+    .section-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--text-muted); margin-bottom: 10px; }
+    .section-value { font-size: 14px; color: var(--text-primary); line-height: 1.6; }
+    .metric-big { font-size: 32px; font-weight: 800; color: var(--high-text); line-height: 1; margin-bottom: 4px; }
+    .metric-label { font-size: 12px; color: var(--text-secondary); }
+    .probability-row { display: flex; align-items: center; justify-content: space-between; margin-top: 10px; }
+    .prob-badge { font-size: 12px; font-weight: 700; padding: 4px 12px; border-radius: 20px; }
+    .prob-high { background: var(--high-bg); color: var(--high-text); }
+    .prob-medium { background: var(--med-bg); color: var(--med-text); }
+    .prob-low { background: var(--low-bg); color: var(--low-text); }
+
+    .btn-cta { background: var(--accent); color: white; padding: 14px 24px; border-radius: var(--radius-sm); font-size: 14px; font-weight: 600; cursor: pointer; border: none; width: 100%; transition: background .15s; margin-top: 6px; }
+    .btn-cta:hover { background: var(--accent-hover); }
+
+    /* ── RECOMMENDATION ── */
+    .rec-steps { display: flex; flex-direction: column; gap: 14px; margin-bottom: 16px; }
+    .rec-step { display: flex; align-items: flex-start; gap: 14px; }
+    .step-num { width: 28px; height: 28px; background: var(--accent); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+    .step-text { font-size: 14px; padding-top: 4px; line-height: 1.6; }
+    .info-box { background: #eff6ff; border: 1px solid #bfdbfe; border-radius: var(--radius-sm); padding: 12px 16px; display: flex; gap: 10px; margin-top: 16px; }
+    .info-box-icon { color: var(--accent); flex-shrink: 0; margin-top: 1px; }
+    .info-box-text { font-size: 12px; color: #1d4ed8; line-height: 1.5; }
+    .btn-success { background: #16a34a; color: white; padding: 14px 24px; border-radius: var(--radius-sm); font-size: 14px; font-weight: 600; cursor: pointer; border: none; width: 100%; transition: background .15s; margin-top: 16px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .btn-success:hover { background: #15803d; }
+
+    /* ── HISTORY ── */
+    .history-item { background: var(--surface); border-radius: var(--radius); padding: 14px 20px; box-shadow: var(--shadow); display: flex; align-items: center; gap: 14px; }
+    .history-time { font-size: 11px; color: var(--text-muted); margin-top: 3px; }
+
+    /* ── LOADING ── */
+    .loading { display: flex; align-items: center; justify-content: center; min-height: 100vh; flex-direction: column; gap: 16px; color: var(--text-secondary); }
+    .spinner { width: 32px; height: 32px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin .7s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .mt-8 { margin-top: 8px; }
     .mt-16 { margin-top: 16px; }
     .text-muted { color: var(--text-muted); font-size: 12px; }
   </style>
 </head>
 <body>
 
-<!-- ═══════════════════════════════════════ -->
-<!-- SCREEN 1: AUTH                         -->
-<!-- ═══════════════════════════════════════ -->
-<div id="screen-auth" class="screen active">
+<!-- Loading -->
+<div id="screen-loading" class="screen active" style="min-height:100vh; align-items:center; justify-content:center; flex-direction:column; gap:16px; background:var(--bg);">
+  <div class="spinner"></div>
+  <div style="color:var(--text-secondary); font-size:13px;">Загрузка данных...</div>
+</div>
+
+<!-- Auth -->
+<div id="screen-auth" class="screen">
   <div class="auth-card">
     <div class="auth-logo">
-      <div class="auth-logo-icon">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-          <polyline points="9 22 9 12 15 12 15 22"/>
-        </svg>
-      </div>
-      <div>
-        <div class="auth-logo-name">BuildingMind AI</div>
-      </div>
+      <div class="auth-logo-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+      <div class="auth-logo-name">BuildingMind AI</div>
     </div>
-
     <div class="auth-title">Добро пожаловать</div>
     <div class="auth-subtitle">Войдите в систему управления объектом</div>
-
+    <div id="auth-error" class="auth-error">Неверный email или пароль</div>
     <div class="form-group">
       <label class="form-label">Email</label>
-      <input type="email" class="form-input" placeholder="name@company.com" value="ivanov@bc-nevsky.ru" />
+      <input id="inp-email" type="email" class="form-input" placeholder="name@company.com" />
     </div>
-
     <div class="form-group">
       <label class="form-label">Пароль</label>
-      <input type="password" class="form-input" placeholder="••••••••" value="password" />
+      <input id="inp-password" type="password" class="form-input" placeholder="••••••••" />
     </div>
-
-    <button class="btn btn-primary" onclick="navigate('dashboard')">Войти</button>
-    <a class="auth-forgot" href="#">Забыли пароль?</a>
+    <button id="btn-login" class="btn-primary" onclick="handleLogin()">Войти</button>
+    <div class="auth-hint">Для демо: ivanov@bc-nevsky.ru / demo123</div>
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════ -->
-<!-- SCREEN 2: DASHBOARD                    -->
-<!-- ═══════════════════════════════════════ -->
+<!-- Dashboard -->
 <div id="screen-dashboard" class="screen app-layout">
-  <!-- Sidebar -->
-  <aside class="sidebar">
+  <aside class="sidebar" id="sidebar-dashboard">
     <div class="sidebar-logo">
-      <div class="sidebar-logo-icon">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-          <polyline points="9 22 9 12 15 12 15 22"/>
-        </svg>
-      </div>
-      <div>
-        <div class="sidebar-logo-name">BuildingMind AI</div>
-        <div class="sidebar-logo-sub">БЦ «Невский, 40»</div>
-      </div>
+      <div class="sidebar-logo-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+      <div><div class="sidebar-logo-name">BuildingMind AI</div><div class="sidebar-logo-sub" id="user-building">—</div></div>
     </div>
-
     <nav class="sidebar-nav">
-      <div class="nav-item active" onclick="switchTab('dashboard', this)">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-        Главная
+      <div class="nav-item active" id="nav-home" onclick="switchTab('home', this)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Главная
       </div>
-      <div class="nav-item" onclick="switchTab('problems', this)">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-        Проблемы
+      <div class="nav-item" id="nav-problems" onclick="switchTab('problems', this)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>Проблемы
       </div>
-      <div class="nav-item" onclick="switchTab('history', this)">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-        История
+      <div class="nav-item" id="nav-history" onclick="switchTab('history', this)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>История
       </div>
     </nav>
-
     <div class="sidebar-user">
-      <div class="user-avatar">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      <div class="user-row">
+        <div class="user-avatar"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+        <div class="user-info"><div class="user-name" id="user-name">—</div><div class="user-role" id="user-role-label">—</div></div>
       </div>
-      <div class="user-info">
-        <div class="user-name">А. Иванов</div>
-        <div class="user-role">Рук. эксплуатации</div>
-      </div>
+      <button class="logout-btn" onclick="handleLogout()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Выйти
+      </button>
     </div>
   </aside>
 
-  <!-- Main -->
   <main class="main-content">
-
-    <!-- TAB: ГЛАВНАЯ -->
-    <div id="tab-dashboard">
+    <!-- Tab: Главная -->
+    <div id="tab-home">
       <div class="page-header">
-        <div>
-          <div class="page-title">Критические проблемы на сегодня</div>
-          <div class="page-date" id="today-date"></div>
-        </div>
+        <div><div class="page-title">Критические проблемы на сегодня</div><div class="page-date" id="today-date"></div></div>
       </div>
-
       <div class="summary-card">
         <div>
-          <div class="summary-count" id="critical-count">
-            <span class="summary-dot"></span><span id="count-num">3</span> критические проблемы
-          </div>
-          <div class="summary-label">Сегодня обнаружено — требуют внимания прямо сейчас</div>
+          <div class="summary-count"><span class="pulse"></span><span id="active-count">0</span> активных проблем</div>
+          <div class="summary-label" id="summary-sub">Загрузка...</div>
         </div>
-        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity=".4"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity=".35"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
       </div>
-
-      <div class="problems-list" id="dashboard-problems">
-        <!-- rendered by JS -->
-      </div>
+      <div class="problems-list" id="home-list"></div>
     </div>
 
-    <!-- TAB: ПРОБЛЕМЫ -->
-    <div id="tab-problems" style="display:none;">
+    <!-- Tab: Проблемы -->
+    <div id="tab-problems" style="display:none">
       <div class="page-header">
-        <div>
-          <div class="page-title">Все проблемы</div>
-          <div class="page-date">Полный список активных событий</div>
-        </div>
+        <div><div class="page-title">Все проблемы</div><div class="page-date">Полный список активных событий</div></div>
       </div>
-      <div class="filter-row">
-        <button class="filter-btn active">Все</button>
-        <button class="filter-btn">Высокий</button>
-        <button class="filter-btn">Средний</button>
-        <button class="filter-btn">Низкий</button>
-        <button class="filter-btn">В работе</button>
+      <div class="filter-row" id="filter-row">
+        <button class="filter-btn active" data-filter="all" onclick="applyFilter('all', this)">Все</button>
+        <button class="filter-btn" data-filter="high" onclick="applyFilter('high', this)">Высокий</button>
+        <button class="filter-btn" data-filter="medium" onclick="applyFilter('medium', this)">Средний</button>
+        <button class="filter-btn" data-filter="low" onclick="applyFilter('low', this)">Низкий</button>
+        <button class="filter-btn" data-filter="done" onclick="applyFilter('done', this)">В работе</button>
       </div>
-      <div class="problems-list" id="all-problems">
-        <!-- rendered by JS -->
-      </div>
+      <div class="problems-list" id="all-list"></div>
     </div>
 
-    <!-- TAB: ИСТОРИЯ -->
-    <div id="tab-history" style="display:none;">
+    <!-- Tab: История -->
+    <div id="tab-history" style="display:none">
       <div class="page-header">
-        <div>
-          <div class="page-title">История решений</div>
-          <div class="page-date">Закрытые и принятые в работу проблемы</div>
-        </div>
+        <div><div class="page-title">История решений</div><div class="page-date">Принятые в работу и закрытые проблемы</div></div>
       </div>
-      <div class="history-empty" id="history-content">
-        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="display:block;margin:0 auto 16px"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-        <p>История пока пуста</p>
-        <p class="text-muted mt-16">Принятые в работу проблемы появятся здесь</p>
-      </div>
+      <div id="history-list"></div>
     </div>
-
   </main>
 </div>
 
-<!-- ═══════════════════════════════════════ -->
-<!-- SCREEN 3: PROBLEM DETAIL               -->
-<!-- ═══════════════════════════════════════ -->
+<!-- Detail -->
 <div id="screen-detail" class="screen app-layout">
   <aside class="sidebar">
     <div class="sidebar-logo">
-      <div class="sidebar-logo-icon">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-          <polyline points="9 22 9 12 15 12 15 22"/>
-        </svg>
-      </div>
-      <div>
-        <div class="sidebar-logo-name">BuildingMind AI</div>
-        <div class="sidebar-logo-sub">БЦ «Невский, 40»</div>
-      </div>
+      <div class="sidebar-logo-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+      <div><div class="sidebar-logo-name">BuildingMind AI</div><div class="sidebar-logo-sub" id="detail-building">—</div></div>
     </div>
     <nav class="sidebar-nav">
-      <div class="nav-item active">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-        Главная
-      </div>
-      <div class="nav-item">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-        Проблемы
-      </div>
-      <div class="nav-item">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-        История
-      </div>
+      <div class="nav-item active"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Главная</div>
+      <div class="nav-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>Проблемы</div>
+      <div class="nav-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>История</div>
     </nav>
     <div class="sidebar-user">
-      <div class="user-avatar">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-      </div>
-      <div class="user-info">
-        <div class="user-name">А. Иванов</div>
-        <div class="user-role">Рук. эксплуатации</div>
+      <div class="user-row">
+        <div class="user-avatar"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+        <div class="user-info"><div class="user-name" id="detail-user-name">—</div><div class="user-role" id="detail-user-role">—</div></div>
       </div>
     </div>
   </aside>
-
   <main class="main-content">
     <button class="back-btn" onclick="navigate('dashboard')">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
-      Назад
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>Назад
     </button>
-
     <div class="detail-header">
-      <div class="detail-title" id="detail-title">HVAC №17</div>
-      <span class="badge badge-high" id="detail-badge">Высокий приоритет</span>
+      <div class="detail-title" id="d-title"></div>
+      <span class="badge" id="d-badge"></span>
     </div>
-
     <div class="detail-grid">
       <div class="detail-section">
         <div class="section-label">Описание</div>
-        <div class="metric-big" id="detail-metric">+22%</div>
-        <div class="metric-label" id="detail-metric-label">по сравнению с нормой</div>
-        <div class="section-value mt-16" id="detail-desc">Рост энергопотребления</div>
+        <div class="metric-big" id="d-metric"></div>
+        <div class="metric-label" id="d-metric-label"></div>
+        <div class="section-value mt-8" id="d-desc"></div>
       </div>
-
       <div class="detail-section">
         <div class="section-label">Почему это важно</div>
-        <div class="section-value" id="detail-why">
-          Система считает проблему критичной, так как энергопотребление стабильно превышает норму последние 4 часа.
-        </div>
+        <div class="section-value" id="d-why"></div>
       </div>
-
       <div class="detail-section">
         <div class="section-label">Возможная причина</div>
-        <div class="section-value" id="detail-cause">
-          Вероятная причина: некорректная работа клапана подачи воздуха.
-        </div>
+        <div class="section-value" id="d-cause"></div>
         <div class="probability-row">
-          <span class="text-muted">Вероятность:</span>
-          <span class="probability-badge" id="detail-prob">высокая</span>
+          <span style="font-size:12px;color:var(--text-muted)">Вероятность:</span>
+          <span class="prob-badge" id="d-prob"></span>
         </div>
       </div>
-
       <div class="detail-section">
         <div class="section-label">Последствия</div>
-        <div class="section-value" id="detail-consequences">
-          Если проблему не устранить, возможен дальнейший рост энергозатрат и перегрев оборудования.
-        </div>
+        <div class="section-value" id="d-consequences"></div>
       </div>
     </div>
-
-    <button class="btn-cta" id="show-rec-btn" onclick="navigate('recommendation')">Показать рекомендацию</button>
+    <button class="btn-cta" onclick="navigate('recommendation')">Показать рекомендацию</button>
   </main>
 </div>
 
-<!-- ═══════════════════════════════════════ -->
-<!-- SCREEN 4: RECOMMENDATION               -->
-<!-- ═══════════════════════════════════════ -->
+<!-- Recommendation -->
 <div id="screen-recommendation" class="screen app-layout">
   <aside class="sidebar">
     <div class="sidebar-logo">
-      <div class="sidebar-logo-icon">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-          <polyline points="9 22 9 12 15 12 15 22"/>
-        </svg>
-      </div>
-      <div>
-        <div class="sidebar-logo-name">BuildingMind AI</div>
-        <div class="sidebar-logo-sub">БЦ «Невский, 40»</div>
-      </div>
+      <div class="sidebar-logo-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+      <div><div class="sidebar-logo-name">BuildingMind AI</div><div class="sidebar-logo-sub" id="rec-building">—</div></div>
     </div>
     <nav class="sidebar-nav">
-      <div class="nav-item active">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-        Главная
-      </div>
-      <div class="nav-item">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-        Проблемы
-      </div>
-      <div class="nav-item">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-        История
-      </div>
+      <div class="nav-item active"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Главная</div>
+      <div class="nav-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>Проблемы</div>
+      <div class="nav-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>История</div>
     </nav>
     <div class="sidebar-user">
-      <div class="user-avatar">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-      </div>
-      <div class="user-info">
-        <div class="user-name">А. Иванов</div>
-        <div class="user-role">Рук. эксплуатации</div>
+      <div class="user-row">
+        <div class="user-avatar"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+        <div class="user-info"><div class="user-name" id="rec-user-name">—</div><div class="user-role" id="rec-user-role">—</div></div>
       </div>
     </div>
   </aside>
-
   <main class="main-content">
     <button class="back-btn" onclick="navigate('detail')">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
-      К карточке проблемы
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>К карточке проблемы
     </button>
-
-    <div style="max-width: 600px;">
-      <div class="page-title" style="margin-bottom: 6px;" id="rec-problem-title">HVAC №17 — Рекомендуемое действие</div>
-      <div class="page-date" style="margin-bottom: 28px;">Сформировано на основе анализа данных за последние 4 часа</div>
-
-      <div class="detail-section" style="margin-bottom: 14px;">
+    <div style="max-width:620px">
+      <div class="page-title" id="rec-title" style="margin-bottom:6px"></div>
+      <div class="page-date" style="margin-bottom:28px">Сформировано на основе анализа данных инженерных систем</div>
+      <div class="detail-section">
         <div class="section-label">Шаги для устранения</div>
-        <div class="rec-steps">
-          <div class="rec-step">
-            <div class="step-num">1</div>
-            <div class="step-text" id="rec-step-1">Проверить клапан подачи воздуха — осмотр на предмет механических повреждений или залипания.</div>
-          </div>
-          <div class="rec-step">
-            <div class="step-num">2</div>
-            <div class="step-text" id="rec-step-2">Проверить работу датчика температуры — убедиться в корректности показаний.</div>
-          </div>
-          <div class="rec-step">
-            <div class="step-num">3</div>
-            <div class="step-text" id="rec-step-3">Сравнить показания с соседними HVAC-блоками на том же этаже.</div>
-          </div>
-        </div>
-
+        <div class="rec-steps" id="rec-steps"></div>
         <div class="info-box">
           <svg class="info-box-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-          <div class="info-box-text">Рекомендации сформированы на основе анализа телеметрии за последние 4 часа и исторических данных по аналогичным инцидентам.</div>
+          <div class="info-box-text">Рекомендации сформированы на основе анализа телеметрии и исторических данных по аналогичным инцидентам на объекте.</div>
         </div>
       </div>
-
       <button class="btn-success" onclick="markInProgress()">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
         Отметить как принято в работу
@@ -956,188 +371,367 @@
 </div>
 
 <script>
-  // ── State ──────────────────────────────────────────────────────────────────
-  const state = {
-    currentProblemId: 0,
-    problems: [
-      {
-        id: 0,
-        name: 'HVAC №17',
-        desc: 'Рост энергопотребления',
-        priority: 'high',
-        priorityLabel: 'Высокий',
-        time: '12 минут назад',
-        status: 'active',
-        metric: '+22%',
-        metricLabel: 'по сравнению с нормой',
-        why: 'Система считает проблему критичной, так как энергопотребление стабильно превышает норму последние 4 часа.',
-        cause: 'Вероятная причина: некорректная работа клапана подачи воздуха.',
-        prob: 'высокая',
-        consequences: 'Если проблему не устранить, возможен дальнейший рост энергозатрат и перегрев оборудования.',
-        steps: [
-          'Проверить клапан подачи воздуха — осмотр на предмет механических повреждений или залипания.',
-          'Проверить работу датчика температуры — убедиться в корректности показаний.',
-          'Сравнить показания с соседними HVAC-блоками на том же этаже.'
-        ]
-      },
-      {
-        id: 1,
-        name: 'Вентиляция В',
-        desc: 'Нестабильная работа',
-        priority: 'med',
-        priorityLabel: 'Средний',
-        time: '28 минут назад',
-        status: 'active',
-        metric: '±35%',
-        metricLabel: 'колебание расхода воздуха',
-        why: 'Система зафиксировала нестабильные показания датчика расхода — разброс превышает допустимый порог.',
-        cause: 'Вероятная причина: износ ремня вентилятора или нестабильное питание двигателя.',
-        prob: 'средняя',
-        consequences: 'Снижение качества вентиляции на этаже, возможный полный отказ блока.',
-        steps: [
-          'Проверить состояние ремня вентилятора на предмет износа или проскальзывания.',
-          'Измерить напряжение питания двигателя мультиметром.',
-          'Сверить показания с журналом ТО за последний месяц.'
-        ]
-      },
-      {
-        id: 2,
-        name: 'Датчик CO₂ (Офис 204)',
-        desc: 'Длительное отсутствие данных',
-        priority: 'low',
-        priorityLabel: 'Низкий',
-        time: '1 час назад',
-        status: 'active',
-        metric: '90+ мин',
-        metricLabel: 'нет данных с датчика',
-        why: 'Датчик не передаёт данные дольше допустимого интервала. Возможна потеря связи или разряд батареи.',
-        cause: 'Вероятная причина: разряд батареи или потеря связи с концентратором.',
-        prob: 'низкая',
-        consequences: 'Отсутствие мониторинга CO₂ в помещении, риск нарушения нормативов качества воздуха.',
-        steps: [
-          'Проверить физическое состояние датчика в офисе 204.',
-          'Заменить батарею или проверить кабельное подключение.',
-          'Перезапустить датчик и убедиться в появлении данных в системе.'
-        ]
-      }
-    ]
-  };
+// ═══════════════════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════════════════
+const S = {
+  user:      null,   // { id, name, role, building }
+  users:     [],
+  problems:  [],     // raw from data.json
+  statuses:  {},     // { problemId: { status, timestamp } }
+  currentId: null,   // currently viewed problem id
+  filter:    'all'
+};
 
-  // ── Date ───────────────────────────────────────────────────────────────────
-  function formatDate() {
-    const d = new Date();
-    return d.toLocaleDateString('ru-RU', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+const ROLES = {
+  facility_manager: 'Рук. эксплуатации',
+  chief_engineer:   'Главный инженер'
+};
+
+// ═══════════════════════════════════════════════════════
+//  PERSISTENCE
+// ═══════════════════════════════════════════════════════
+function saveStatuses() {
+  localStorage.setItem('bm_statuses', JSON.stringify(S.statuses));
+}
+function loadStatuses() {
+  try { return JSON.parse(localStorage.getItem('bm_statuses') || '{}'); } catch { return {}; }
+}
+function saveSession(user) {
+  localStorage.setItem('bm_user', JSON.stringify(user));
+}
+function loadSession() {
+  try { return JSON.parse(localStorage.getItem('bm_user')); } catch { return null; }
+}
+function clearSession() {
+  localStorage.removeItem('bm_user');
+}
+
+// ═══════════════════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════════════════
+async function init() {
+  S.statuses = loadStatuses();
+
+  try {
+    const data = await fetch('./data.json').then(r => r.json());
+    S.users    = data.users;
+    S.problems = data.problems;
+  } catch (e) {
+    console.error('Не удалось загрузить data.json', e);
   }
 
-  // ── Navigation ─────────────────────────────────────────────────────────────
-  function navigate(to) {
-    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-    document.getElementById('screen-' + to).classList.add('active');
-    window.scrollTo(0, 0);
-
-    if (to === 'dashboard') {
-      renderDashboard();
-      renderAllProblems();
-    }
-    if (to === 'detail') {
-      renderDetail();
+  const saved = loadSession();
+  if (saved) {
+    const still = S.users.find(u => u.id === saved.id);
+    if (still) {
+      S.user = saved;
+      navigate('dashboard');
+      return;
     }
   }
+  navigate('auth');
+}
 
-  function switchTab(tab, el) {
-    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-    el.classList.add('active');
-    document.querySelectorAll('#screen-dashboard .main-content > div').forEach(d => d.style.display = 'none');
-    document.getElementById('tab-' + tab).style.display = '';
+// ═══════════════════════════════════════════════════════
+//  AUTH
+// ═══════════════════════════════════════════════════════
+function handleLogin() {
+  const email    = document.getElementById('inp-email').value.trim();
+  const password = document.getElementById('inp-password').value;
+  const errEl    = document.getElementById('auth-error');
+  const btn      = document.getElementById('btn-login');
+
+  errEl.classList.remove('visible');
+  document.getElementById('inp-email').classList.remove('error');
+  document.getElementById('inp-password').classList.remove('error');
+
+  if (!email || !password) {
+    errEl.textContent = 'Введите email и пароль';
+    errEl.classList.add('visible');
+    return;
   }
 
-  // ── Render helpers ─────────────────────────────────────────────────────────
-  const priorityIcon = {
-    high: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>`,
-    med:  `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`,
-    low:  `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>`,
-    done: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`
-  };
-
-  function problemCardHTML(p) {
-    const isDone = p.status === 'done';
-    const iconClass = isDone ? 'done' : p.priority;
-    const badgeClass = isDone ? 'badge-done' : `badge-${p.priority}`;
-    const badgeLabel = isDone ? 'В работе' : p.priorityLabel;
-    const icon = isDone ? priorityIcon.done : priorityIcon[p.priority];
-    const timeText = isDone
-      ? `Принято в работу в ${new Date().getHours()}:${String(new Date().getMinutes()).padStart(2,'0')}`
-      : `Обнаружено ${p.time}`;
-    const clickable = !isDone;
-
-    return `
-      <div class="problem-card" ${clickable ? `onclick="openProblem(${p.id})"` : ''} style="${isDone ? 'opacity:.7;cursor:default;' : ''}">
-        <div class="problem-icon ${iconClass}">${icon}</div>
-        <div class="problem-info">
-          <div class="problem-name">${p.name}</div>
-          <div class="problem-desc">${p.desc}</div>
-          <div class="problem-time">${timeText}</div>
-        </div>
-        <div class="problem-meta">
-          <span class="badge ${badgeClass}">${badgeLabel}</span>
-          ${clickable ? `<svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>` : ''}
-        </div>
-      </div>`;
+  const user = S.users.find(u => u.email === email && u.password === password);
+  if (!user) {
+    errEl.textContent = 'Неверный email или пароль';
+    errEl.classList.add('visible');
+    document.getElementById('inp-email').classList.add('error');
+    document.getElementById('inp-password').classList.add('error');
+    return;
   }
 
-  function renderDashboard() {
-    const active = state.problems.filter(p => p.status === 'active');
-    document.getElementById('count-num').textContent = active.length;
-    document.getElementById('today-date').textContent = formatDate();
-    document.getElementById('dashboard-problems').innerHTML =
-      state.problems.map(p => problemCardHTML(p)).join('');
-  }
+  S.user = { id: user.id, name: user.name, role: user.role, building: user.building };
+  saveSession(S.user);
+  navigate('dashboard');
+}
 
-  function renderAllProblems() {
-    document.getElementById('all-problems').innerHTML =
-      state.problems.map(p => problemCardHTML(p)).join('');
-  }
+function handleLogout() {
+  S.user = null;
+  clearSession();
+  navigate('auth');
+}
 
-  function openProblem(id) {
-    state.currentProblemId = id;
-    navigate('detail');
-  }
+// Enter on password field
+document.getElementById('inp-password').addEventListener('keydown', e => {
+  if (e.key === 'Enter') handleLogin();
+});
+document.getElementById('inp-email').addEventListener('keydown', e => {
+  if (e.key === 'Enter') document.getElementById('inp-password').focus();
+});
 
-  function renderDetail() {
-    const p = state.problems[state.currentProblemId];
-    document.getElementById('detail-title').textContent = p.name;
-    document.getElementById('detail-badge').textContent = p.priorityLabel + ' приоритет';
-    document.getElementById('detail-badge').className = `badge badge-${p.priority}`;
-    document.getElementById('detail-metric').textContent = p.metric;
-    document.getElementById('detail-metric-label').textContent = p.metricLabel;
-    document.getElementById('detail-desc').textContent = p.desc;
-    document.getElementById('detail-why').textContent = p.why;
-    document.getElementById('detail-cause').textContent = p.cause;
-    document.getElementById('detail-prob').textContent = p.prob;
-    document.getElementById('detail-consequences').textContent = p.consequences;
-    // Recommendation screen
-    document.getElementById('rec-problem-title').textContent = p.name + ' — Рекомендуемое действие';
-    document.getElementById('rec-step-1').textContent = p.steps[0];
-    document.getElementById('rec-step-2').textContent = p.steps[1];
-    document.getElementById('rec-step-3').textContent = p.steps[2];
-  }
+// ═══════════════════════════════════════════════════════
+//  NAVIGATION
+// ═══════════════════════════════════════════════════════
+function navigate(to) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-' + to).classList.add('active');
+  window.scrollTo(0, 0);
 
-  function markInProgress() {
-    const p = state.problems[state.currentProblemId];
-    p.status = 'done';
-    navigate('dashboard');
+  if (to === 'auth') {
+    document.getElementById('inp-email').value    = '';
+    document.getElementById('inp-password').value = '';
+    document.getElementById('auth-error').classList.remove('visible');
   }
+  if (to === 'dashboard') {
+    fillUserUI();
+    renderHomeTab();
+    renderAllTab();
+    renderHistoryTab();
+    document.getElementById('today-date').textContent = formatDate(new Date());
+  }
+  if (to === 'detail') {
+    fillUserUI();
+    renderDetail();
+  }
+  if (to === 'recommendation') {
+    fillUserUI();
+    renderRecommendation();
+  }
+}
 
-  // ── Filter buttons (Проблемы tab) ──────────────────────────────────────────
-  document.querySelectorAll('.filter-btn').forEach(btn => {
-    btn.addEventListener('click', function() {
-      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-      this.classList.add('active');
-    });
+function switchTab(tab, el) {
+  document.querySelectorAll('#screen-dashboard .nav-item').forEach(n => n.classList.remove('active'));
+  el.classList.add('active');
+  ['home','problems','history'].forEach(t => {
+    document.getElementById('tab-' + t).style.display = (t === tab) ? '' : 'none';
   });
+}
 
-  // ── Init ───────────────────────────────────────────────────────────────────
-  document.getElementById('today-date').textContent = formatDate();
+function fillUserUI() {
+  if (!S.user) return;
+  const name = S.user.name;
+  const role = ROLES[S.user.role] || S.user.role;
+  const building = S.user.building || '';
+  ['user-name','detail-user-name','rec-user-name'].forEach(id => { const el = document.getElementById(id); if(el) el.textContent = name; });
+  ['user-role-label','detail-user-role','rec-user-role'].forEach(id => { const el = document.getElementById(id); if(el) el.textContent = role; });
+  ['user-building','detail-building','rec-building'].forEach(id => { const el = document.getElementById(id); if(el) el.textContent = building; });
+}
+
+// ═══════════════════════════════════════════════════════
+//  DATA HELPERS
+// ═══════════════════════════════════════════════════════
+function getProblemStatus(id) {
+  return S.statuses[id]?.status || 'active';
+}
+function getStatusTimestamp(id) {
+  return S.statuses[id]?.timestamp || null;
+}
+
+function enrichedProblems() {
+  return S.problems.map(p => ({
+    ...p,
+    status:      getProblemStatus(p.id),
+    statusAt:    getStatusTimestamp(p.id),
+    detectedAt:  new Date(Date.now() - p.detected_minutes_ago * 60 * 1000)
+  })).sort((a, b) => b.priority_score - a.priority_score);
+}
+
+function activeCritical() {
+  return enrichedProblems().filter(p => p.status === 'active' && p.priority === 'high');
+}
+
+// ═══════════════════════════════════════════════════════
+//  TIME FORMATTING
+// ═══════════════════════════════════════════════════════
+function timeAgo(date) {
+  const diff = Math.floor((Date.now() - date) / 1000);
+  if (diff < 60)   return 'только что';
+  if (diff < 3600) return `${Math.floor(diff / 60)} мин. назад`;
+  if (diff < 86400) {
+    const h = Math.floor(diff / 3600);
+    return `${h} ${h === 1 ? 'час' : h < 5 ? 'часа' : 'часов'} назад`;
+  }
+  const d = Math.floor(diff / 86400);
+  return `${d} ${d === 1 ? 'день' : d < 5 ? 'дня' : 'дней'} назад`;
+}
+
+function formatDate(d) {
+  return d.toLocaleDateString('ru-RU', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+}
+
+function formatTime(isoString) {
+  const d = new Date(isoString);
+  return d.toLocaleString('ru-RU', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+}
+
+// ═══════════════════════════════════════════════════════
+//  ICONS / BADGES
+// ═══════════════════════════════════════════════════════
+const ICONS = {
+  high:   `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>`,
+  medium: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`,
+  low:    `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>`,
+  done:   `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`
+};
+const LABELS = { high: 'Высокий', medium: 'Средний', low: 'Низкий' };
+
+function problemCardHTML(p, clickable = true) {
+  const isDone  = p.status !== 'active';
+  const iclass  = isDone ? 'done' : p.priority;
+  const icon    = isDone ? ICONS.done : ICONS[p.priority];
+  const badge   = isDone
+    ? `<span class="badge badge-done">В работе</span>`
+    : `<span class="badge badge-${p.priority}">${LABELS[p.priority]}</span>`;
+  const time = isDone && p.statusAt
+    ? `Принято в работу: ${formatTime(p.statusAt)}`
+    : `Обнаружено ${timeAgo(p.detectedAt)}`;
+  const click = (clickable && !isDone) ? `onclick="openProblem('${p.id}')"` : '';
+
+  return `
+    <div class="problem-card ${isDone ? 'done' : ''}" ${click}>
+      <div class="problem-icon ${iclass}">${icon}</div>
+      <div class="problem-info">
+        <div class="problem-name">${p.system_name}</div>
+        <div class="problem-desc">${p.description}</div>
+        <div class="problem-time">${time}</div>
+      </div>
+      <div class="problem-meta">
+        ${badge}
+        ${(clickable && !isDone) ? `<svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>` : ''}
+      </div>
+    </div>`;
+}
+
+function emptyHTML(text, sub = '') {
+  return `<div class="empty-state">
+    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+    <p>${text}</p>${sub ? `<small>${sub}</small>` : ''}
+  </div>`;
+}
+
+// ═══════════════════════════════════════════════════════
+//  RENDER TABS
+// ═══════════════════════════════════════════════════════
+function renderHomeTab() {
+  const all     = enrichedProblems();
+  const active  = all.filter(p => p.status === 'active');
+  const high    = active.filter(p => p.priority === 'high').length;
+
+  document.getElementById('active-count').textContent = active.length;
+  document.getElementById('summary-sub').textContent = high > 0
+    ? `${high} высокого приоритета — требуют немедленного внимания`
+    : 'Критических проблем нет — следите за средним приоритетом';
+
+  const el = document.getElementById('home-list');
+  el.innerHTML = all.length
+    ? all.map(p => problemCardHTML(p)).join('')
+    : emptyHTML('Нет активных проблем', 'Все системы работают в штатном режиме');
+}
+
+function renderAllTab() {
+  renderFilteredList(S.filter);
+}
+
+function applyFilter(filter, btn) {
+  S.filter = filter;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderFilteredList(filter);
+}
+
+function renderFilteredList(filter) {
+  const all = enrichedProblems();
+  let list;
+  if (filter === 'all')  list = all;
+  else if (filter === 'done') list = all.filter(p => p.status !== 'active');
+  else list = all.filter(p => p.status === 'active' && p.priority === filter);
+
+  document.getElementById('all-list').innerHTML = list.length
+    ? list.map(p => problemCardHTML(p)).join('')
+    : emptyHTML('Нет проблем с таким фильтром');
+}
+
+function renderHistoryTab() {
+  const done = enrichedProblems()
+    .filter(p => p.status !== 'active' && p.statusAt)
+    .sort((a, b) => new Date(b.statusAt) - new Date(a.statusAt));
+
+  const el = document.getElementById('history-list');
+  el.innerHTML = done.length
+    ? done.map(p => `
+      <div class="history-item" style="margin-bottom:10px">
+        <div class="problem-icon done">${ICONS.done}</div>
+        <div class="problem-info">
+          <div class="problem-name">${p.system_name}</div>
+          <div class="problem-desc">${p.description}</div>
+          <div class="history-time">Принято в работу: ${formatTime(p.statusAt)}</div>
+        </div>
+        <span class="badge badge-${p.priority}">${LABELS[p.priority]}</span>
+      </div>`).join('')
+    : emptyHTML('История пуста', 'Принятые в работу проблемы появятся здесь');
+}
+
+// ═══════════════════════════════════════════════════════
+//  DETAIL + RECOMMENDATION
+// ═══════════════════════════════════════════════════════
+function openProblem(id) {
+  S.currentId = id;
+  navigate('detail');
+}
+
+function renderDetail() {
+  const p = S.problems.find(x => x.id === S.currentId);
+  if (!p) return;
+
+  document.getElementById('d-title').textContent       = p.system_name;
+  document.getElementById('d-metric').textContent      = p.metric;
+  document.getElementById('d-metric-label').textContent = p.metric_label;
+  document.getElementById('d-desc').textContent        = p.description;
+  document.getElementById('d-why').textContent         = p.why;
+  document.getElementById('d-cause').textContent       = p.cause;
+  document.getElementById('d-consequences').textContent = p.consequences;
+
+  const badge = document.getElementById('d-badge');
+  badge.textContent  = LABELS[p.priority] + ' приоритет';
+  badge.className    = `badge badge-${p.priority}`;
+
+  const prob = document.getElementById('d-prob');
+  prob.textContent = p.cause_probability;
+  prob.className   = `prob-badge prob-${p.cause_probability === 'высокая' ? 'high' : p.cause_probability === 'средняя' ? 'medium' : 'low'}`;
+}
+
+function renderRecommendation() {
+  const p = S.problems.find(x => x.id === S.currentId);
+  if (!p) return;
+
+  document.getElementById('rec-title').textContent = p.system_name + ' — Рекомендуемое действие';
+  document.getElementById('rec-steps').innerHTML   = p.steps.map((s, i) =>
+    `<div class="rec-step"><div class="step-num">${i + 1}</div><div class="step-text">${s}</div></div>`
+  ).join('');
+}
+
+function markInProgress() {
+  if (!S.currentId) return;
+  S.statuses[S.currentId] = { status: 'in_progress', timestamp: new Date().toISOString() };
+  saveStatuses();
+  navigate('dashboard');
+}
+
+// ═══════════════════════════════════════════════════════
+//  BOOT
+// ═══════════════════════════════════════════════════════
+init();
 </script>
 </body>
 </html>
