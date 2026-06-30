@@ -80,6 +80,13 @@
     .user-role { font-size: 11px; color: var(--sidebar-text); }
     .logout-btn { width: 100%; margin-top: 10px; padding: 7px; background: transparent; border: 1px solid #1e293b; border-radius: var(--radius-sm); color: var(--sidebar-text); font-size: 12px; cursor: pointer; transition: all .15s; display: flex; align-items: center; justify-content: center; gap: 6px; }
     .logout-btn:hover { background: #1e293b; color: #e2e8f0; }
+    .reset-btn { width: 100%; margin-top: 6px; padding: 6px; background: transparent; border: none; color: #475569; font-size: 11px; cursor: pointer; transition: color .15s; display: flex; align-items: center; justify-content: center; gap: 5px; }
+    .reset-btn:hover { color: var(--sidebar-text); }
+
+    /* ── TOAST ── */
+    .toast { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(20px); background: #0f172a; color: #f8fafc; padding: 12px 20px; border-radius: 10px; font-size: 13px; font-weight: 500; box-shadow: 0 10px 30px rgba(0,0,0,.25); display: flex; align-items: center; gap: 9px; opacity: 0; pointer-events: none; transition: opacity .25s, transform .25s; z-index: 1000; }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    .toast .toast-icon { color: var(--done-text); display: flex; }
 
     .main-content { margin-left: 220px; min-height: 100vh; padding: 32px; }
 
@@ -246,6 +253,9 @@
       <button class="logout-btn" onclick="handleLogout()">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Выйти
       </button>
+      <button class="reset-btn" onclick="resetDemo()" title="Вернуть все проблемы в активный список — для нового сеанса демо">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>Сбросить демо
+      </button>
     </div>
   </aside>
 
@@ -403,6 +413,12 @@
   </main>
 </div>
 
+<!-- Toast -->
+<div id="toast" class="toast">
+  <span class="toast-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+  <span id="toast-msg"></span>
+</div>
+
 <script src="./analysis.js"></script>
 <script>
 // ═══════════════════════════════════════════════════════
@@ -526,8 +542,9 @@ function navigate(to) {
   window.scrollTo(0, 0);
 
   if (to === 'auth') {
-    document.getElementById('inp-email').value    = '';
-    document.getElementById('inp-password').value = '';
+    // префилл демо-доступа — убираем трение при показе пользователям
+    document.getElementById('inp-email').value    = 'ivanov@bc-nevsky.ru';
+    document.getElementById('inp-password').value = 'demo123';
     document.getElementById('auth-error').classList.remove('visible');
   }
   if (to === 'dashboard') {
@@ -849,9 +866,32 @@ function renderRecommendation() {
 
 function markInProgress() {
   if (!S.currentId) return;
+  const p = S.problems.find(x => x.id === S.currentId);
   S.statuses[S.currentId] = { status: 'in_progress', timestamp: new Date().toISOString() };
   saveStatuses();
   navigate('dashboard');
+  showToast(`«${p ? p.system_name : 'Проблема'}» принята в работу`);
+}
+
+// ── Toast: короткое подтверждение действия ──
+let _toastTimer = null;
+function showToast(msg) {
+  const el = document.getElementById('toast');
+  document.getElementById('toast-msg').textContent = msg;
+  el.classList.add('show');
+  clearTimeout(_toastTimer);
+  _toastTimer = setTimeout(() => el.classList.remove('show'), 2800);
+}
+
+// ── Сброс демо: вернуть все проблемы в активный список (для нового сеанса) ──
+function resetDemo() {
+  S.statuses = {};
+  saveStatuses();
+  S.filter = 'all';
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.toggle('active', b.dataset.filter === 'all'));
+  switchTab('home', document.getElementById('nav-home'));
+  navigate('dashboard');
+  showToast('Демо сброшено — все проблемы снова активны');
 }
 
 // ═══════════════════════════════════════════════════════
