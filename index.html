@@ -1,0 +1,1143 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BuildingMind AI</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #f1f5f9;
+      --surface: #ffffff;
+      --sidebar-bg: #0f172a;
+      --sidebar-hover: #1e293b;
+      --sidebar-active: #1e293b;
+      --sidebar-text: #94a3b8;
+      --sidebar-text-active: #f8fafc;
+      --text-primary: #0f172a;
+      --text-secondary: #64748b;
+      --text-muted: #94a3b8;
+      --border: #e2e8f0;
+      --accent: #2563eb;
+      --accent-hover: #1d4ed8;
+
+      --high-bg: #fef2f2;
+      --high-text: #dc2626;
+      --high-border: #fecaca;
+      --med-bg: #fffbeb;
+      --med-text: #d97706;
+      --med-border: #fde68a;
+      --low-bg: #eff6ff;
+      --low-text: #2563eb;
+      --low-border: #bfdbfe;
+      --done-bg: #f0fdf4;
+      --done-text: #16a34a;
+      --done-border: #bbf7d0;
+
+      --radius: 12px;
+      --radius-sm: 8px;
+      --shadow: 0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
+      --shadow-md: 0 4px 6px -1px rgba(0,0,0,.07), 0 2px 4px -1px rgba(0,0,0,.04);
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text-primary);
+      min-height: 100vh;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .screen { display: none; }
+    .screen.active { display: flex; }
+
+    /* ─── AUTH ─── */
+    #screen-auth {
+      min-height: 100vh;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%);
+    }
+
+    .auth-card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 48px 40px;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: 0 20px 60px rgba(0,0,0,.3);
+    }
+
+    .auth-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 32px;
+      justify-content: center;
+    }
+
+    .auth-logo-icon {
+      width: 40px;
+      height: 40px;
+      background: var(--accent);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .auth-logo-icon svg { color: white; }
+
+    .auth-logo-name {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .auth-title {
+      text-align: center;
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .auth-subtitle {
+      text-align: center;
+      color: var(--text-secondary);
+      margin-bottom: 32px;
+      font-size: 13px;
+    }
+
+    .form-group { margin-bottom: 18px; }
+
+    .form-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+      margin-bottom: 6px;
+      color: var(--text-primary);
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      outline: none;
+      transition: border-color .15s;
+      background: #f8fafc;
+    }
+
+    .form-input:focus { border-color: var(--accent); background: white; }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 10px 20px;
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: all .15s;
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: white;
+      width: 100%;
+      padding: 12px;
+    }
+
+    .btn-primary:hover { background: var(--accent-hover); }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--text-secondary);
+    }
+
+    .btn-ghost:hover { color: var(--accent); }
+
+    .auth-forgot {
+      display: block;
+      text-align: center;
+      margin-top: 16px;
+      color: var(--text-secondary);
+      font-size: 13px;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .auth-forgot:hover { color: var(--accent); }
+
+    /* ─── APP LAYOUT ─── */
+    .app-layout {
+      min-height: 100vh;
+      width: 100%;
+    }
+
+    .sidebar {
+      position: fixed;
+      left: 0; top: 0; bottom: 0;
+      width: 220px;
+      background: var(--sidebar-bg);
+      display: flex;
+      flex-direction: column;
+      padding: 0;
+      z-index: 100;
+    }
+
+    .sidebar-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 24px 20px;
+      border-bottom: 1px solid #1e293b;
+    }
+
+    .sidebar-logo-icon {
+      width: 32px;
+      height: 32px;
+      background: var(--accent);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .sidebar-logo-name {
+      font-size: 14px;
+      font-weight: 700;
+      color: #f8fafc;
+      line-height: 1.2;
+    }
+
+    .sidebar-logo-sub {
+      font-size: 10px;
+      color: var(--sidebar-text);
+      font-weight: 400;
+    }
+
+    .sidebar-nav {
+      flex: 1;
+      padding: 16px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: var(--radius-sm);
+      color: var(--sidebar-text);
+      cursor: pointer;
+      transition: all .15s;
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .nav-item:hover { background: var(--sidebar-hover); color: #e2e8f0; }
+    .nav-item.active { background: var(--sidebar-active); color: var(--sidebar-text-active); }
+    .nav-item svg { flex-shrink: 0; }
+
+    .sidebar-user {
+      padding: 16px 20px;
+      border-top: 1px solid #1e293b;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .user-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #334155;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .user-info { flex: 1; }
+    .user-name { font-size: 12px; font-weight: 600; color: #e2e8f0; }
+    .user-role { font-size: 11px; color: var(--sidebar-text); }
+
+    .main-content {
+      margin-left: 220px;
+      min-height: 100vh;
+      padding: 32px;
+    }
+
+    /* ─── PAGE HEADER ─── */
+    .page-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 24px;
+    }
+
+    .page-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .page-date {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-top: 3px;
+    }
+
+    /* ─── SUMMARY CARD ─── */
+    .summary-card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .summary-count {
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--text-primary);
+    }
+
+    .summary-label {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-top: 2px;
+    }
+
+    .summary-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: var(--high-text);
+      display: inline-block;
+      margin-right: 6px;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    /* ─── PROBLEM LIST ─── */
+    .problems-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .problem-card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      box-shadow: var(--shadow);
+      cursor: pointer;
+      transition: box-shadow .15s, transform .1s;
+      border: 1.5px solid transparent;
+    }
+
+    .problem-card:hover {
+      box-shadow: var(--shadow-md);
+      border-color: var(--border);
+      transform: translateY(-1px);
+    }
+
+    .problem-icon {
+      width: 40px; height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .problem-icon.high { background: var(--high-bg); color: var(--high-text); }
+    .problem-icon.med  { background: var(--med-bg);  color: var(--med-text);  }
+    .problem-icon.low  { background: var(--low-bg);  color: var(--low-text);  }
+    .problem-icon.done { background: var(--done-bg); color: var(--done-text); }
+
+    .problem-info { flex: 1; min-width: 0; }
+
+    .problem-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 2px;
+    }
+
+    .problem-desc {
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    .problem-time {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 3px;
+    }
+
+    .problem-meta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .badge-high  { background: var(--high-bg);  color: var(--high-text);  }
+    .badge-med   { background: var(--med-bg);   color: var(--med-text);   }
+    .badge-low   { background: var(--low-bg);   color: var(--low-text);   }
+    .badge-done  { background: var(--done-bg);  color: var(--done-text);  }
+
+    .chevron { color: var(--text-muted); }
+
+    /* ─── DETAIL PAGE ─── */
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--text-secondary);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      margin-bottom: 24px;
+      padding: 6px 0;
+      border: none;
+      background: none;
+      transition: color .15s;
+    }
+
+    .back-btn:hover { color: var(--accent); }
+
+    .detail-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 28px;
+    }
+
+    .detail-title {
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--text-primary);
+    }
+
+    .detail-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+
+    .detail-section {
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 20px;
+      box-shadow: var(--shadow);
+    }
+
+    .detail-section.full { grid-column: 1 / -1; }
+
+    .section-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+
+    .section-value {
+      font-size: 14px;
+      color: var(--text-primary);
+      line-height: 1.6;
+    }
+
+    .metric-big {
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--high-text);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .metric-label {
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    .probability-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 10px;
+    }
+
+    .probability-badge {
+      background: var(--high-bg);
+      color: var(--high-text);
+      font-size: 12px;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 20px;
+    }
+
+    .btn-cta {
+      background: var(--accent);
+      color: white;
+      padding: 14px 24px;
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      width: 100%;
+      text-align: center;
+      transition: background .15s;
+      margin-top: 6px;
+    }
+
+    .btn-cta:hover { background: var(--accent-hover); }
+
+    /* ─── RECOMMENDATION ─── */
+    .rec-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .rec-step {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+    }
+
+    .step-num {
+      width: 28px; height: 28px;
+      background: var(--accent);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .step-text {
+      font-size: 14px;
+      color: var(--text-primary);
+      padding-top: 4px;
+      line-height: 1.5;
+    }
+
+    .info-box {
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      border-radius: var(--radius-sm);
+      padding: 12px 16px;
+      display: flex;
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    .info-box-icon { color: var(--accent); flex-shrink: 0; margin-top: 1px; }
+    .info-box-text { font-size: 12px; color: #1d4ed8; line-height: 1.5; }
+
+    .btn-success {
+      background: #16a34a;
+      color: white;
+      padding: 14px 24px;
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      width: 100%;
+      text-align: center;
+      transition: background .15s;
+      margin-top: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn-success:hover { background: #15803d; }
+
+    /* ─── HISTORY ─── */
+    .history-empty {
+      text-align: center;
+      padding: 80px 20px;
+      color: var(--text-muted);
+    }
+
+    .history-empty svg { margin-bottom: 16px; opacity: .4; }
+    .history-empty p { font-size: 15px; }
+
+    /* ─── PROBLEMS PAGE ─── */
+    .filter-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .filter-btn {
+      padding: 7px 16px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1.5px solid var(--border);
+      background: var(--surface);
+      color: var(--text-secondary);
+      transition: all .15s;
+    }
+
+    .filter-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
+    .filter-btn:hover:not(.active) { border-color: var(--accent); color: var(--accent); }
+
+    /* util */
+    .mt-16 { margin-top: 16px; }
+    .text-muted { color: var(--text-muted); font-size: 12px; }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- SCREEN 1: AUTH                         -->
+<!-- ═══════════════════════════════════════ -->
+<div id="screen-auth" class="screen active">
+  <div class="auth-card">
+    <div class="auth-logo">
+      <div class="auth-logo-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+          <polyline points="9 22 9 12 15 12 15 22"/>
+        </svg>
+      </div>
+      <div>
+        <div class="auth-logo-name">BuildingMind AI</div>
+      </div>
+    </div>
+
+    <div class="auth-title">Добро пожаловать</div>
+    <div class="auth-subtitle">Войдите в систему управления объектом</div>
+
+    <div class="form-group">
+      <label class="form-label">Email</label>
+      <input type="email" class="form-input" placeholder="name@company.com" value="ivanov@bc-nevsky.ru" />
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Пароль</label>
+      <input type="password" class="form-input" placeholder="••••••••" value="password" />
+    </div>
+
+    <button class="btn btn-primary" onclick="navigate('dashboard')">Войти</button>
+    <a class="auth-forgot" href="#">Забыли пароль?</a>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- SCREEN 2: DASHBOARD                    -->
+<!-- ═══════════════════════════════════════ -->
+<div id="screen-dashboard" class="screen app-layout">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="sidebar-logo-icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+          <polyline points="9 22 9 12 15 12 15 22"/>
+        </svg>
+      </div>
+      <div>
+        <div class="sidebar-logo-name">BuildingMind AI</div>
+        <div class="sidebar-logo-sub">БЦ «Невский, 40»</div>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-item active" onclick="switchTab('dashboard', this)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        Главная
+      </div>
+      <div class="nav-item" onclick="switchTab('problems', this)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        Проблемы
+      </div>
+      <div class="nav-item" onclick="switchTab('history', this)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        История
+      </div>
+    </nav>
+
+    <div class="sidebar-user">
+      <div class="user-avatar">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </div>
+      <div class="user-info">
+        <div class="user-name">А. Иванов</div>
+        <div class="user-role">Рук. эксплуатации</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="main-content">
+
+    <!-- TAB: ГЛАВНАЯ -->
+    <div id="tab-dashboard">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Критические проблемы на сегодня</div>
+          <div class="page-date" id="today-date"></div>
+        </div>
+      </div>
+
+      <div class="summary-card">
+        <div>
+          <div class="summary-count" id="critical-count">
+            <span class="summary-dot"></span><span id="count-num">3</span> критические проблемы
+          </div>
+          <div class="summary-label">Сегодня обнаружено — требуют внимания прямо сейчас</div>
+        </div>
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity=".4"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      </div>
+
+      <div class="problems-list" id="dashboard-problems">
+        <!-- rendered by JS -->
+      </div>
+    </div>
+
+    <!-- TAB: ПРОБЛЕМЫ -->
+    <div id="tab-problems" style="display:none;">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Все проблемы</div>
+          <div class="page-date">Полный список активных событий</div>
+        </div>
+      </div>
+      <div class="filter-row">
+        <button class="filter-btn active">Все</button>
+        <button class="filter-btn">Высокий</button>
+        <button class="filter-btn">Средний</button>
+        <button class="filter-btn">Низкий</button>
+        <button class="filter-btn">В работе</button>
+      </div>
+      <div class="problems-list" id="all-problems">
+        <!-- rendered by JS -->
+      </div>
+    </div>
+
+    <!-- TAB: ИСТОРИЯ -->
+    <div id="tab-history" style="display:none;">
+      <div class="page-header">
+        <div>
+          <div class="page-title">История решений</div>
+          <div class="page-date">Закрытые и принятые в работу проблемы</div>
+        </div>
+      </div>
+      <div class="history-empty" id="history-content">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="display:block;margin:0 auto 16px"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        <p>История пока пуста</p>
+        <p class="text-muted mt-16">Принятые в работу проблемы появятся здесь</p>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- SCREEN 3: PROBLEM DETAIL               -->
+<!-- ═══════════════════════════════════════ -->
+<div id="screen-detail" class="screen app-layout">
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="sidebar-logo-icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+          <polyline points="9 22 9 12 15 12 15 22"/>
+        </svg>
+      </div>
+      <div>
+        <div class="sidebar-logo-name">BuildingMind AI</div>
+        <div class="sidebar-logo-sub">БЦ «Невский, 40»</div>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-item active">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        Главная
+      </div>
+      <div class="nav-item">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        Проблемы
+      </div>
+      <div class="nav-item">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        История
+      </div>
+    </nav>
+    <div class="sidebar-user">
+      <div class="user-avatar">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </div>
+      <div class="user-info">
+        <div class="user-name">А. Иванов</div>
+        <div class="user-role">Рук. эксплуатации</div>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <button class="back-btn" onclick="navigate('dashboard')">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      Назад
+    </button>
+
+    <div class="detail-header">
+      <div class="detail-title" id="detail-title">HVAC №17</div>
+      <span class="badge badge-high" id="detail-badge">Высокий приоритет</span>
+    </div>
+
+    <div class="detail-grid">
+      <div class="detail-section">
+        <div class="section-label">Описание</div>
+        <div class="metric-big" id="detail-metric">+22%</div>
+        <div class="metric-label" id="detail-metric-label">по сравнению с нормой</div>
+        <div class="section-value mt-16" id="detail-desc">Рост энергопотребления</div>
+      </div>
+
+      <div class="detail-section">
+        <div class="section-label">Почему это важно</div>
+        <div class="section-value" id="detail-why">
+          Система считает проблему критичной, так как энергопотребление стабильно превышает норму последние 4 часа.
+        </div>
+      </div>
+
+      <div class="detail-section">
+        <div class="section-label">Возможная причина</div>
+        <div class="section-value" id="detail-cause">
+          Вероятная причина: некорректная работа клапана подачи воздуха.
+        </div>
+        <div class="probability-row">
+          <span class="text-muted">Вероятность:</span>
+          <span class="probability-badge" id="detail-prob">высокая</span>
+        </div>
+      </div>
+
+      <div class="detail-section">
+        <div class="section-label">Последствия</div>
+        <div class="section-value" id="detail-consequences">
+          Если проблему не устранить, возможен дальнейший рост энергозатрат и перегрев оборудования.
+        </div>
+      </div>
+    </div>
+
+    <button class="btn-cta" id="show-rec-btn" onclick="navigate('recommendation')">Показать рекомендацию</button>
+  </main>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- SCREEN 4: RECOMMENDATION               -->
+<!-- ═══════════════════════════════════════ -->
+<div id="screen-recommendation" class="screen app-layout">
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="sidebar-logo-icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+          <polyline points="9 22 9 12 15 12 15 22"/>
+        </svg>
+      </div>
+      <div>
+        <div class="sidebar-logo-name">BuildingMind AI</div>
+        <div class="sidebar-logo-sub">БЦ «Невский, 40»</div>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-item active">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        Главная
+      </div>
+      <div class="nav-item">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        Проблемы
+      </div>
+      <div class="nav-item">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        История
+      </div>
+    </nav>
+    <div class="sidebar-user">
+      <div class="user-avatar">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </div>
+      <div class="user-info">
+        <div class="user-name">А. Иванов</div>
+        <div class="user-role">Рук. эксплуатации</div>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <button class="back-btn" onclick="navigate('detail')">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      К карточке проблемы
+    </button>
+
+    <div style="max-width: 600px;">
+      <div class="page-title" style="margin-bottom: 6px;" id="rec-problem-title">HVAC №17 — Рекомендуемое действие</div>
+      <div class="page-date" style="margin-bottom: 28px;">Сформировано на основе анализа данных за последние 4 часа</div>
+
+      <div class="detail-section" style="margin-bottom: 14px;">
+        <div class="section-label">Шаги для устранения</div>
+        <div class="rec-steps">
+          <div class="rec-step">
+            <div class="step-num">1</div>
+            <div class="step-text" id="rec-step-1">Проверить клапан подачи воздуха — осмотр на предмет механических повреждений или залипания.</div>
+          </div>
+          <div class="rec-step">
+            <div class="step-num">2</div>
+            <div class="step-text" id="rec-step-2">Проверить работу датчика температуры — убедиться в корректности показаний.</div>
+          </div>
+          <div class="rec-step">
+            <div class="step-num">3</div>
+            <div class="step-text" id="rec-step-3">Сравнить показания с соседними HVAC-блоками на том же этаже.</div>
+          </div>
+        </div>
+
+        <div class="info-box">
+          <svg class="info-box-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <div class="info-box-text">Рекомендации сформированы на основе анализа телеметрии за последние 4 часа и исторических данных по аналогичным инцидентам.</div>
+        </div>
+      </div>
+
+      <button class="btn-success" onclick="markInProgress()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        Отметить как принято в работу
+      </button>
+    </div>
+  </main>
+</div>
+
+<script>
+  // ── State ──────────────────────────────────────────────────────────────────
+  const state = {
+    currentProblemId: 0,
+    problems: [
+      {
+        id: 0,
+        name: 'HVAC №17',
+        desc: 'Рост энергопотребления',
+        priority: 'high',
+        priorityLabel: 'Высокий',
+        time: '12 минут назад',
+        status: 'active',
+        metric: '+22%',
+        metricLabel: 'по сравнению с нормой',
+        why: 'Система считает проблему критичной, так как энергопотребление стабильно превышает норму последние 4 часа.',
+        cause: 'Вероятная причина: некорректная работа клапана подачи воздуха.',
+        prob: 'высокая',
+        consequences: 'Если проблему не устранить, возможен дальнейший рост энергозатрат и перегрев оборудования.',
+        steps: [
+          'Проверить клапан подачи воздуха — осмотр на предмет механических повреждений или залипания.',
+          'Проверить работу датчика температуры — убедиться в корректности показаний.',
+          'Сравнить показания с соседними HVAC-блоками на том же этаже.'
+        ]
+      },
+      {
+        id: 1,
+        name: 'Вентиляция В',
+        desc: 'Нестабильная работа',
+        priority: 'med',
+        priorityLabel: 'Средний',
+        time: '28 минут назад',
+        status: 'active',
+        metric: '±35%',
+        metricLabel: 'колебание расхода воздуха',
+        why: 'Система зафиксировала нестабильные показания датчика расхода — разброс превышает допустимый порог.',
+        cause: 'Вероятная причина: износ ремня вентилятора или нестабильное питание двигателя.',
+        prob: 'средняя',
+        consequences: 'Снижение качества вентиляции на этаже, возможный полный отказ блока.',
+        steps: [
+          'Проверить состояние ремня вентилятора на предмет износа или проскальзывания.',
+          'Измерить напряжение питания двигателя мультиметром.',
+          'Сверить показания с журналом ТО за последний месяц.'
+        ]
+      },
+      {
+        id: 2,
+        name: 'Датчик CO₂ (Офис 204)',
+        desc: 'Длительное отсутствие данных',
+        priority: 'low',
+        priorityLabel: 'Низкий',
+        time: '1 час назад',
+        status: 'active',
+        metric: '90+ мин',
+        metricLabel: 'нет данных с датчика',
+        why: 'Датчик не передаёт данные дольше допустимого интервала. Возможна потеря связи или разряд батареи.',
+        cause: 'Вероятная причина: разряд батареи или потеря связи с концентратором.',
+        prob: 'низкая',
+        consequences: 'Отсутствие мониторинга CO₂ в помещении, риск нарушения нормативов качества воздуха.',
+        steps: [
+          'Проверить физическое состояние датчика в офисе 204.',
+          'Заменить батарею или проверить кабельное подключение.',
+          'Перезапустить датчик и убедиться в появлении данных в системе.'
+        ]
+      }
+    ]
+  };
+
+  // ── Date ───────────────────────────────────────────────────────────────────
+  function formatDate() {
+    const d = new Date();
+    return d.toLocaleDateString('ru-RU', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+  }
+
+  // ── Navigation ─────────────────────────────────────────────────────────────
+  function navigate(to) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById('screen-' + to).classList.add('active');
+    window.scrollTo(0, 0);
+
+    if (to === 'dashboard') {
+      renderDashboard();
+      renderAllProblems();
+    }
+    if (to === 'detail') {
+      renderDetail();
+    }
+  }
+
+  function switchTab(tab, el) {
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    el.classList.add('active');
+    document.querySelectorAll('#screen-dashboard .main-content > div').forEach(d => d.style.display = 'none');
+    document.getElementById('tab-' + tab).style.display = '';
+  }
+
+  // ── Render helpers ─────────────────────────────────────────────────────────
+  const priorityIcon = {
+    high: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>`,
+    med:  `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`,
+    low:  `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>`,
+    done: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`
+  };
+
+  function problemCardHTML(p) {
+    const isDone = p.status === 'done';
+    const iconClass = isDone ? 'done' : p.priority;
+    const badgeClass = isDone ? 'badge-done' : `badge-${p.priority}`;
+    const badgeLabel = isDone ? 'В работе' : p.priorityLabel;
+    const icon = isDone ? priorityIcon.done : priorityIcon[p.priority];
+    const timeText = isDone
+      ? `Принято в работу в ${new Date().getHours()}:${String(new Date().getMinutes()).padStart(2,'0')}`
+      : `Обнаружено ${p.time}`;
+    const clickable = !isDone;
+
+    return `
+      <div class="problem-card" ${clickable ? `onclick="openProblem(${p.id})"` : ''} style="${isDone ? 'opacity:.7;cursor:default;' : ''}">
+        <div class="problem-icon ${iconClass}">${icon}</div>
+        <div class="problem-info">
+          <div class="problem-name">${p.name}</div>
+          <div class="problem-desc">${p.desc}</div>
+          <div class="problem-time">${timeText}</div>
+        </div>
+        <div class="problem-meta">
+          <span class="badge ${badgeClass}">${badgeLabel}</span>
+          ${clickable ? `<svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>` : ''}
+        </div>
+      </div>`;
+  }
+
+  function renderDashboard() {
+    const active = state.problems.filter(p => p.status === 'active');
+    document.getElementById('count-num').textContent = active.length;
+    document.getElementById('today-date').textContent = formatDate();
+    document.getElementById('dashboard-problems').innerHTML =
+      state.problems.map(p => problemCardHTML(p)).join('');
+  }
+
+  function renderAllProblems() {
+    document.getElementById('all-problems').innerHTML =
+      state.problems.map(p => problemCardHTML(p)).join('');
+  }
+
+  function openProblem(id) {
+    state.currentProblemId = id;
+    navigate('detail');
+  }
+
+  function renderDetail() {
+    const p = state.problems[state.currentProblemId];
+    document.getElementById('detail-title').textContent = p.name;
+    document.getElementById('detail-badge').textContent = p.priorityLabel + ' приоритет';
+    document.getElementById('detail-badge').className = `badge badge-${p.priority}`;
+    document.getElementById('detail-metric').textContent = p.metric;
+    document.getElementById('detail-metric-label').textContent = p.metricLabel;
+    document.getElementById('detail-desc').textContent = p.desc;
+    document.getElementById('detail-why').textContent = p.why;
+    document.getElementById('detail-cause').textContent = p.cause;
+    document.getElementById('detail-prob').textContent = p.prob;
+    document.getElementById('detail-consequences').textContent = p.consequences;
+    // Recommendation screen
+    document.getElementById('rec-problem-title').textContent = p.name + ' — Рекомендуемое действие';
+    document.getElementById('rec-step-1').textContent = p.steps[0];
+    document.getElementById('rec-step-2').textContent = p.steps[1];
+    document.getElementById('rec-step-3').textContent = p.steps[2];
+  }
+
+  function markInProgress() {
+    const p = state.problems[state.currentProblemId];
+    p.status = 'done';
+    navigate('dashboard');
+  }
+
+  // ── Filter buttons (Проблемы tab) ──────────────────────────────────────────
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+    });
+  });
+
+  // ── Init ───────────────────────────────────────────────────────────────────
+  document.getElementById('today-date').textContent = formatDate();
+</script>
+</body>
+</html>
